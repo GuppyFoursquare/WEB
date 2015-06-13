@@ -1,0 +1,40 @@
+RewriteEngine On
+
+
+RewriteBase /
+RewriteRule api$ api/api_router.php
+RewriteRule home$ home.php
+RewriteRule nearme$ nearme.php
+RewriteRule edit/profile/([^.]+)$ edit_profile.php?username=$1
+RewriteRule edit/profile/([^.]+)/$ edit_profile.php?username=$1
+RewriteRule edit/profile$ edit_profile.php
+RewriteRule edit/profile/$ edit_profile.php
+RewriteRule view/profile/([^.]+)$ view_profile.php?username=$1
+RewriteRule view/profile/([^.]+)/$ view_profile.php?username=$1
+RewriteRule view/profile$ view_profile.php
+RewriteRule view/profile/$ view_profile.php
+RewriteRule contact-us$ contact_us.php
+RewriteRule contact-us/$ contact_us.php
+RewriteRule add-place$ add_place.php
+RewriteRule add-place/$ add_place.php
+RewriteRule password/change$ change_password.php
+RewriteRule password/change/$ change_password.php
+RewriteRule faq$ faq.php
+RewriteRule faq/$ faq.php
+RewriteRule register$ register.php
+RewriteRule register/$ register.php
+RewriteRule most-popular$ most_popular.php
+RewriteRule most-popular/$ most_popular.php
+RewriteRule my-comments$ my_comments.php
+RewriteRule my-comments/$ my_comments.php
+RewriteRule content/([^.]+)$ content.php?cnt=$1
+RewriteRule places/([^\.]+)$ places.php?r=$1
+#RewriteRule news$ news.php
+#RewriteRule news/([^\.]+)/([^\.]+)$  news.php?r=$1&page=$2
+RewriteRule ^news/([^.]+)/$  news.php?r=$1
+RewriteRule ^news/([^.]+)$  news.php?r=$1 [L]
+
+#RewriteCond %{REQUEST_FILENAME} !-f
+#RewriteRule ^([^\.]+)$ $1.php [NC,L]
+
+#ErrorDocument 404 http://localhost/moms_list/page-not-found
