@@ -1,7 +1,7 @@
 RewriteEngine On
 
 
-RewriteBase /
+RewriteBase /youbaku/
 RewriteRule api$ api/api_router.php
 RewriteRule home$ home.php
 RewriteRule nearme$ nearme.php

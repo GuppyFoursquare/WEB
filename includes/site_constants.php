@@ -12,7 +12,7 @@ $sPathString = "http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']);
 if($_SERVER['HTTP_HOST'] == "youbaku.az"){ 
     define(SITEPATH,str_replace("\\","",$sPathString)."/");
 }else{ define(SITEPATH,str_replace("\\","",$sPathString)."/"); }
-$FRONTPATH = "http://" . $_SERVER['HTTP_HOST'] . "/";
+$FRONTPATH = "http://" . $_SERVER['HTTP_HOST'] . "/youbaku/";
 define('SERVER_FRONT_PATH', $FRONTPATH);
 define('SITE_PATH', $FRONTPATH);
 define(SITENAME, " | YOUBAKU");
