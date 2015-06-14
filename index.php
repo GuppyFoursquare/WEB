@@ -9,6 +9,7 @@
 
 #SETUP -----------------------------------------------------------------------
 #
+
 include("prepend.php");
 error_reporting(E_ALL);
 $_SESSION['is_most_popular'] = 0;

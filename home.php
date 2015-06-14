@@ -14,7 +14,7 @@ $searchText = (isset($_GET['sr']) ? mysql_real_escape_string($_GET['sr']) : '');
 $chbExactSearch = (isset($_GET['chbexactsearch']) ? 1 : 0);
 
     $formData = array();
-    $catArr = fetchCategory($obj);
+    $catArr = fetchCategory($obj);    
     $formData['pCat'] = $catArr;
     //$obj->printResult($formData['pCat']);
     if(isset($_SESSION['is_most_popular']))
@@ -64,6 +64,6 @@ function fetchNewsSpecials($obj){
 
 include 'ajax.places.php';
 
-
 include("template/home.php");
+     
 ?>
