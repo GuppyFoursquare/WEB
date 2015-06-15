@@ -8,18 +8,28 @@
  * @Description : This is the API result object
 ********************************************************/    
 
-    include './resultConstant.php';
+    include './ResourceBundle.php';
 
     class Result
     {
+        public static $SUCCESS;
+        public static $SUCCESS_EMPTY;
+        
         public $status;
         public $code;
-        public $result;
+        public $content;
         
-        function __construct() {
-            $status = 'result.guppy.010';
-            $code   = $ResultGuppy001;
-            $result = null; 
+        /*******************************************
+         ************** CONSTRUCTOR ****************
+         ******************************************/
+        function __construct($code,$status) {
+            $this->status = $status; 
+            $this->code = $code; 
+        }                
+        
+        static function initializeStaticObjects(){
+            Result::$SUCCESS            = new Result(ResultGuppy001Code , ResultGuppy001Status);
+            Result::$SUCCESS_EMPTY      = new Result(ResultGuppy010Code , ResultGuppy010Status);
         }
         
         function setStatus($status) { 
@@ -28,15 +38,21 @@
         function setCode($code) { 
             $this->code = $code; 
         }
-        function setResult($result) { 
-            $this->result = $result; 
+        
+        function setContent($content){
+            $resultObj = new Result($this->code, $this->status);
+            $resultObj->content = $content;
+            return $resultObj;
         }
-                
+        
+        
+        /*
         function apiSuccess($resVal){
-            $this->status = 'SUCCESS';
-            $this->code   = 'result.guppy.010';
-            $this->result = $resVal;
+            $this->status = ResultGuppy001Status;
+            $this->code   = ResultGuppy001Code;
+            $this->content = $resVal;
         }
+         */
         
     }
 

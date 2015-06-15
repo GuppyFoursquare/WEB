@@ -8,9 +8,13 @@
  * @Description : These are the RESULT Constants
 ********************************************************/    
 
-    define($ResultGuppy001 , 'SUCCESS' );
-    
-//    define('result.guppy.010', 'SUCCESS_EMPTY');
+        define( 'ResultGuppy001Code'    , 'result.guppy.001');
+        define( 'ResultGuppy010Code'    , 'result.guppy.010');
+        
+        define( 'ResultGuppy001Status'  , 'SUCCESS');                
+        define( 'ResultGuppy010Status'  , 'SUCCESS_EMPTY');
+       
+        
 //    define('result.guppy.090', 'SUCCESS_LOGOUT');
 //    define('result.guppy.101', 'FAILURE_AUTH');
 //    define('result.guppy.102', 'FAILURE_AUTH_SESSION');

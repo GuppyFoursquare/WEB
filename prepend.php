@@ -16,7 +16,9 @@ require_once("includes/connection.inc.php");
 require_once("includes/db.php");
 require_once("api/Result.php");
 $obj = new db();
-$api = new Result();
+
+//----- INCLUDE RESULT OBJECT -----//
+Result::initializeStaticObjects();
 
 //----- INCLUDE SITE CONSTANT FILE -----//
 require_once("includes/site_constants.php");

@@ -8,20 +8,19 @@
  * @Description : This is the category API
 ********************************************************/    
    
-    include("../prepend.php");    
+    include("../prepend.php");     
     error_reporting(E_ALL);
         
-    if(isset($_GET['category']))
-    {         
+    if(isset($_GET['cat_id']))
+    {                                
         
-        $api->setResult($_GET['category']);
-//        $api->apiSuccess("asd");
-//        $apiResponse = json_encode($api);
+        $subCatArr = fetchCategory($obj,$_GET['cat_id']);                 
+        echo json_encode(Result::$SUCCESS->setContent($subCatArr));
         
     }else{
-        $catArr = fetchCategory($obj);                       
-        $api->apiSuccess($catArr);        
+        
+        $catArr = fetchCategory($obj);          
+        echo json_encode(Result::$SUCCESS->setContent($catArr));        
     }        
         
-    echo json_encode($api);
 ?>
