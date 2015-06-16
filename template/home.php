@@ -71,6 +71,14 @@
        
         $(function() {
             
+            // - API TEST -
+            $.get( "http://localhost/youbaku/api/places.php", {})
+                .done(function( data ) {
+                    alert("API test return");
+                    var obj = JSON.parse(data);
+                    console.log(obj);
+                });
+                
             var temp = 0;
             //$("#mainScroll").mCustomScrollbar({axis:"xy"});
             
@@ -1093,7 +1101,7 @@
                                 </div>
                             </div>
                              <div class="resultDiv">
-                                <!-- print result output here.... -->
+                                <!-- print result output here.... -->                                
                                 <?php echo getResultHtml($obj,$searchText,$chbExactSearch);?>                            
                              </div>
                         </div>

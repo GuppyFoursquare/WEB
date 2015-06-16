@@ -32,7 +32,7 @@ switch($step){
 }
 
 
-function fetchPlaces($obj,$searchText = '',$exactSearch = 0,$categories = '',$features = '',$page = 0,$allRec = 0){
+function fetchPlaces($obj,$searchText = '',$exactSearch = 0,$categories = '',$features = '',$page = 0,$allRec = 0){    
     $limit = 6;
     
     $tblName = " yb_places plc 
@@ -42,7 +42,7 @@ function fetchPlaces($obj,$searchText = '',$exactSearch = 0,$categories = '',$fe
              LEFT JOIN yb_category subCat ON (plc_cat.plc_sub_cat_id = subCat.cat_id) 
              LEFT JOIN yb_category pCat ON (subCat.cat_parent_id = pCat.cat_id) 
              LEFT JOIN yb_features f ON (plc_fet.feature_id = f.feature_id) 
-            ";
+            ";    
     if(isset($_SESSION['is_most_popular']))
     {
         if($_SESSION['is_most_popular'] == 1)
@@ -109,7 +109,7 @@ function fetchPlaces($obj,$searchText = '',$exactSearch = 0,$categories = '',$fe
     }
         
     
-    $plcArr = $obj->selectQuery($tblName, $disCol, $where, $order_col, $order_by , $group_by='', $disQuery = '');
+    $plcArr = $obj->selectQuery($tblName, $disCol, $where, $order_col, $order_by , $group_by='', $disQuery = '');    
     $flag = 0;
     $final_array = array();
     if($exactSearch)
@@ -196,7 +196,7 @@ function fetchPlaces($obj,$searchText = '',$exactSearch = 0,$categories = '',$fe
         //die;
         return $final_array;
     }
-    
+        
     return $plcArr;
 }
 
@@ -257,36 +257,35 @@ function getSliderDetails($obj){
 
 
 function getResultHtml($obj,$searchText = '',$exactsearch = 0,$categories = '',$features = '',$page = 0){
-    
+           
     $fetchPlaces = array();
     if($page)
         $fetchPlaces = fetchPlaces($obj,$searchText,$exactsearch,$categories,$features,$page);
     else
         $fetchPlaces = fetchPlaces($obj,$searchText,$exactsearch,$categories,$features);
-    
+                  
     $row_inc = 0;    
     if($page > 0)
         $row_inc = $page * 6;
     foreach($fetchPlaces as $place){ $row_inc++ ?>
     <div class="list_tiles <?php echo ($row_inc % 3 == 0 ? 'col_2' : 'col_1')?> <?php echo ($row_inc % 2 == 0 ? 'float_right' : '')?>">
-        <div class="col_img">
-        
-        <div class="col_img_over">
-            <div class="over" data-link="<?php  echo SITE_PATH.'places/'. base64_encode($place['plc_id']);?>">
-                <a href="<?php  echo SITE_PATH.'places/'. base64_encode($place['plc_id']);?>">MORE INFORMATION</a>
-        </div>
-            <div class="foggyimg" style="margin-bottom: -3px;">
-                <img src="<?php echo (!empty($place['plc_gallery_media']) ? PLACES_MEDIUM_IMAGE_PATH.$place['plc_gallery_media'] : DEFAULT_IMAGE_PATH);?>" alt="<?php echo htmlentities(stripslashes($place['plc_name']));?>"/>
+        <div class="col_img">            
+            <div class="col_img_over">
+                <div class="over" data-link="<?php  echo SITE_PATH.'places/'. base64_encode($place['plc_id']);?>">
+                    <a href="<?php  echo SITE_PATH.'places/'. base64_encode($place['plc_id']);?>">MORE INFORMATION</a>
             </div>
-        </div>
-        <div class="col-text">
-            
-                <!--div class="cap_text">
-                    <img src="images/favourites.png" alt=""/>
-                </div-->
-            
-            <div title="<?php echo htmlentities(stripslashes($place['plc_name']));?>" class="cap_text1"><?php echo htmlentities(strlen($place['plc_name']) > 15 ? substr(stripslashes($place['plc_name']),0,15).'...' : stripslashes($place['plc_name']));?></div>
-        </div>
+                <div class="foggyimg" style="margin-bottom: -3px;">
+                    <img src="<?php echo (!empty($place['plc_gallery_media']) ? PLACES_MEDIUM_IMAGE_PATH.$place['plc_gallery_media'] : DEFAULT_IMAGE_PATH);?>" alt="<?php echo htmlentities(stripslashes($place['plc_name']));?>"/>
+                </div>
+            </div>
+            <div class="col-text">
+
+                    <!--div class="cap_text">
+                        <img src="images/favourites.png" alt=""/>
+                    </div-->
+
+                <div title="<?php echo htmlentities(stripslashes($place['plc_name']));?>" class="cap_text1"><?php echo htmlentities(strlen($place['plc_name']) > 15 ? substr(stripslashes($place['plc_name']),0,15).'...' : stripslashes($place['plc_name']));?></div>
+            </div>
         </div>
     </div>
     <?php }?>

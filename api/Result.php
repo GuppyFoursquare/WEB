@@ -14,6 +14,7 @@
     {
         public static $SUCCESS;
         public static $SUCCESS_EMPTY;
+        public static $FAILURE_PARAM_MISMATCH;
         
         public $status;
         public $code;
@@ -28,8 +29,9 @@
         }                
         
         static function initializeStaticObjects(){
-            Result::$SUCCESS            = new Result(ResultGuppy001Code , ResultGuppy001Status);
-            Result::$SUCCESS_EMPTY      = new Result(ResultGuppy010Code , ResultGuppy010Status);
+            Result::$SUCCESS                    = new Result(ResultGuppy001Code , ResultGuppy001Status);
+            Result::$SUCCESS_EMPTY              = new Result(ResultGuppy010Code , ResultGuppy010Status);
+            Result::$FAILURE_PARAM_MISMATCH     = new Result(ResultGuppy511Code , ResultGuppy511Status);
         }
         
         function setStatus($status) { 

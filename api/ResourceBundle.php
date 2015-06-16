@@ -10,9 +10,11 @@
 
         define( 'ResultGuppy001Code'    , 'result.guppy.001');
         define( 'ResultGuppy010Code'    , 'result.guppy.010');
+        define( 'ResultGuppy511Code'    , 'result.guppy.511');
         
         define( 'ResultGuppy001Status'  , 'SUCCESS');                
         define( 'ResultGuppy010Status'  , 'SUCCESS_EMPTY');
+        define( 'ResultGuppy511Status'  , 'FAILURE_PARAM_MISMATCH');
        
         
 //    define('result.guppy.090', 'SUCCESS_LOGOUT');
