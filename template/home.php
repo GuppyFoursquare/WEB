@@ -358,9 +358,7 @@
                     }).get();
                     var chkCategories = $('.chkCategories:checkbox:checked').map(function() {
                         return this.value;
-                    }).get();
-                    
-                    
+                    }).get();                                        
                        
                     //chkCategories = $.unique(chkCategories.sort());
 //                    chkCategories = chkCategories.filter(

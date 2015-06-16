@@ -18,6 +18,11 @@
     $param_latitude     = isset($_GET['lat']) ? $_GET['lat'] : null; 
     $param_longitude    = isset($_GET['lon']) ? $_GET['lon'] : null; 
     $param_plc_id       = isset($_GET['plc_id']) ? $_GET['plc_id'] : null; 
+    $param_src_key      = isset($_GET['src_key']) ? $_GET['src_key'] : ''; 
+    $param_src_ekey     = isset($_GET['src_ekey']) ? $_GET['src_ekey'] : 0; 
+    $param_src_cat      = isset($_GET['src_cat']) ? $_GET['src_cat'] : null;
+    $param_src_fea      = isset($_GET['src_fea']) ? $_GET['src_fea'] : null;
+    $param_src_pg       = isset($_GET['src_pg']) ? $_GET['src_pg'] : 0;
     $result             = Result::$SUCCESS_EMPTY;
     $resultError        = "";
     
@@ -43,6 +48,12 @@
                 $result = Result::$FAILURE_PARAM_MISMATCH->setContent($resultError);  
             }
             
+        }else if(strcmp(strtolower($param_op),"search")==0){
+            
+            //fetchPlaces($obj,$searchText = '',$exactSearch = 0,$categories = '',$features = '',$page = 0,$allRec = 0){    
+            $fetchPlaces = fetchPlaces($obj, $param_src_key, $param_src_ekey, $param_src_cat, $param_src_fea, $param_src_pg );
+            $result = Result::$SUCCESS->setContent($fetchPlaces); 
+            
         }else{
             $resultError = "Operation parameter mismatch";
             $result = Result::$FAILURE_PARAM_MISMATCH->setContent($resultError);
@@ -51,29 +62,6 @@
     }       
     
     echo json_encode($result);
-    
-    /************************************************************
-     *********************** FUNCTIONS **************************
-     ************************************************************/
-    
-    /**    
-     * @author GUPPY Org. <kskaraca@gmail.com>
-     * @param type $d array object
-     * @return type
-     * @version 1.0 
-     * 
-     * This function is used for encoding objects to JSON
-     * properly.
-     */
-    function utf8ize($d) {
-        if (is_array($d)) {
-            foreach ($d as $k => $v) {
-                $d[$k] = utf8ize($v);
-            }
-        } else if (is_string ($d)) {
-            return utf8_encode($d);
-        }
-        return $d;
-    }
+            
     
 ?>
