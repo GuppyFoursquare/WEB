@@ -11,7 +11,7 @@
 
 #SETUP -----------------------------------------------------------------------
     include("prepend.php");
-    include("./getLocationsFunction.php");
+    include("./functions/placeOperations.php");
     
     $latitude1 = (isset($_GET['lat']) ? $_GET['lat'] : '');
     $longitude1 = (isset($_GET['long']) ? $_GET['long'] : '');    

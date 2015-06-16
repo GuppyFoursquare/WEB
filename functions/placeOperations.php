@@ -1,12 +1,10 @@
 <?php
 /******************** PAGE DETAILS ********************/
-/* @Programmer  : A.D.
- * @Maintainer  : A.D.
- * @Created     : 02 feb 2015
- * @Modified    : Guppy Org.
- * @ModifiedBy  : Kemal Sami KARACA 
- * @ModifiedDate: 16/06/2015
- * @Description : This is the reset password page of project
+/* @Programmer  : Kemal Sami KARACA
+ * @Maintainer  : Guppy Org.
+ * @Created     : 16/06/2015
+ * @Modified    : 
+ * @Description : This is the general functions for PLACEs
 ********************************************************/
                                   
         /**
@@ -29,7 +27,8 @@
             
             return $strSqlSearch;
         }
-            
+          
+        
         /**
          * 
          * @param type $latitude
@@ -56,6 +55,48 @@
             //array_push($memLocation, array($memResultData['plc_id'].",".$memResultData['plc_name'].",".$memResultData['plc_header_image'].",".$memResultData['plc_email'].",".$memResultData['plc_contact'].",".$memResultData['plc_website'].",".$memResultData['plc_city'].",".$memResultData['state_name'].",".$memResultData['state_abbr'].",".$memResultData['country_name'],$memResultData['plc_latitude'],$memResultData['plc_longitude']));
 
             return $memLocation;            
+        }
+        
+        
+        /**
+         * 
+         * @param type $obj
+         * @param type $placeid
+         */
+        function getPlaceFromID($obj,$param_plc_id){
+            
+            $tblName = " yb_places plc ";
+                $disCol = " plc.plc_id,"
+                        . "plc.plc_name,"
+                        . "plc.plc_header_image,"
+                        . "plc.plc_email,"
+                        . "plc.plc_contact,"
+                        . "plc.plc_website,"
+                        . "plc.plc_intime,"
+                        . "plc.plc_outtime,"
+                        . "plc.plc_country_id,"
+                        . "plc.plc_state_id,"
+                        . "plc.plc_city,"
+                        . "plc.plc_address,"
+                        . "plc.plc_meta_description,"
+                        . "plc.plc_keywords,"
+                        . "plc.plc_zip,"
+                        . "plc.plc_latitude,"
+                        . "plc.plc_longitude,"
+                        . "plc.plc_menu,"
+                        . "plc.plc_info_title";
+
+                $where = " plc.plc_is_active=1 "
+                        . " AND plc.plc_is_delete=0 "
+                        . " AND plc.plc_id=" . $param_plc_id . " ";
+
+                $order_col = '';
+                $order_by = '';              
+
+                $fetchPlace = $obj->selectQuery($tblName, $disCol, $where, $order_col, $order_by , $group_by='', $disQuery = '');
+                $fetchPlace = utf8ize($fetchPlace);  
+            
+                return $fetchPlace;
         }
     
 ?>

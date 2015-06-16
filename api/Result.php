@@ -8,7 +8,7 @@
  * @Description : This is the API result object
 ********************************************************/    
 
-    include './ResourceBundle.php';
+    include './ResourceBundle.php';        
 
     class Result
     {
@@ -29,9 +29,9 @@
         }                
         
         static function initializeStaticObjects(){
-            Result::$SUCCESS                    = new Result(ResultGuppy001Code , ResultGuppy001Status);
-            Result::$SUCCESS_EMPTY              = new Result(ResultGuppy010Code , ResultGuppy010Status);
-            Result::$FAILURE_PARAM_MISMATCH     = new Result(ResultGuppy511Code , ResultGuppy511Status);
+            Result::$SUCCESS                    = Result::$SUCCESS ? Result::$SUCCESS->setContent(null) : new Result(ResultGuppy001Code , ResultGuppy001Status);
+            Result::$SUCCESS_EMPTY              = Result::$SUCCESS_EMPTY ? Result::$SUCCESS_EMPTY->setContent(null) : new Result(ResultGuppy010Code , ResultGuppy010Status);
+            Result::$FAILURE_PARAM_MISMATCH     = Result::$FAILURE_PARAM_MISMATCH ? Result::$FAILURE_PARAM_MISMATCH->setContent(null) : new Result(ResultGuppy511Code , ResultGuppy511Status);
         }
         
         function setStatus($status) { 

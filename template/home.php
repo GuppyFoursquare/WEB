@@ -72,12 +72,12 @@
         $(function() {
             
             // - API TEST -
-            $.get( "http://localhost/youbaku/api/places.php", {})
-                .done(function( data ) {
-                    alert("API test return");
-                    var obj = JSON.parse(data);
-                    console.log(obj);
-                });
+//            $.get( "http://localhost/youbaku/api/places.php", {})
+//                .done(function( data ) {
+//                    alert("API test return");
+//                    var obj = JSON.parse(data);
+//                    console.log(obj);
+//                });
                 
             var temp = 0;
             //$("#mainScroll").mCustomScrollbar({axis:"xy"});
