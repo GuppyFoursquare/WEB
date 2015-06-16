@@ -10,15 +10,16 @@
 
         define( 'ResultGuppy001Code'    , 'result.guppy.001');
         define( 'ResultGuppy010Code'    , 'result.guppy.010');
+        define( 'ResultGuppy101Code'    , 'result.guppy.101');
         define( 'ResultGuppy511Code'    , 'result.guppy.511');
         
         define( 'ResultGuppy001Status'  , 'SUCCESS');                
         define( 'ResultGuppy010Status'  , 'SUCCESS_EMPTY');
+        define( 'ResultGuppy101Status'  , 'FAILURE_AUTH');
         define( 'ResultGuppy511Status'  , 'FAILURE_PARAM_MISMATCH');
        
         
 //    define('result.guppy.090', 'SUCCESS_LOGOUT');
-//    define('result.guppy.101', 'FAILURE_AUTH');
 //    define('result.guppy.102', 'FAILURE_AUTH_SESSION');
 //    define('result.guppy.111', 'FAILURE_AUTH_WRONG');
 //    define('result.guppy.121', 'FAILURE_AUTH_MULTIPLE');

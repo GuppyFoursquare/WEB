@@ -1,12 +1,15 @@
 <?php   
     include_once("prepend.php");
-$_SESSION['is_most_popular'] = 0;
+    include_once("./functions/authOperations.php");
+    
+    $_SESSION['is_most_popular'] = 0;
     if(!empty($_POST))
     {
-        
+                                        
         if(isset($_POST['username']) && isset($_POST['password']))
         {
-            
+        
+            /*
             $sQuery="SELECT usr_id,usr_first_name,usr_last_name,usr_dob,usr_username,usr_email,usr_contact,usr_address,usr_city,usr_state,usr_country,usr_zip,usr_profile_picture FROM yb_users WHERE usr_username='".$_POST['username']."' AND usr_password = '".md5($_POST['password'])."' AND usr_user_type='U'";
             $aDetails = mysql_query($sQuery);
             $row=mysql_num_rows($aDetails);
@@ -38,7 +41,18 @@ $_SESSION['is_most_popular'] = 0;
                 $_SESSION['login_fail'] = 1;
                 $link_redirect = isset($_POST['redirect_link']) ? 'http://'.$_SERVER['HTTP_HOST'].base64_decode(urldecode($_POST['redirect_link'])) : SITE_PATH.'index.php';
                 header('location:'.$link_redirect);
+            }            
+            */  
+            
+            $res = authLogin($_POST['username'], $_POST['password']);
+            if(Result::$SUCCESS->checkResult($res)){
+                $link_redirect = isset($_POST['redirect_link']) ? 'http://'.$_SERVER['HTTP_HOST'].base64_decode(urldecode($_POST['redirect_link'])) : SITE_PATH.'index.php';
+                header('location:'.$link_redirect);
+            }else{
+                $link_redirect = isset($_POST['redirect_link']) ? 'http://'.$_SERVER['HTTP_HOST'].base64_decode(urldecode($_POST['redirect_link'])) : SITE_PATH.'index.php';
+                header('location:'.$link_redirect);
             }
+            
         }
         else if(isset($_POST['recovery_email']))
         {
