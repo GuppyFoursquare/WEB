@@ -6,7 +6,7 @@
  * @Modified    : 
  * @Description : This is the general functions for PLACEs
 ********************************************************/
-                                  
+                       
         /**
          * 
          * @param type $latitude
@@ -14,19 +14,20 @@
          * @return string
          */
         function getPlacesQuery($latitude , $longitude){
-                $strSqlSearch = "SELECT plc_id,plc_name,plc_header_image,plc_latitude,plc_longitude,plc_email,plc_contact,plc_website,plc_city ,s.state_name,s.state_abbr, c.country_name , ( 3959 * acos( cos( radians(".$latitude.") ) 
-                    * cos( radians( plc_latitude ) ) * cos( radians( plc_longitude ) - radians(".$longitude.") ) 
-                    + sin( radians(".$latitude.") ) * sin( radians( plc_latitude ) ) ) ) 
-                    AS distance 
+            
+                                   
+                $strSqlSearch = "SELECT "
+                        . "*,"
+                        . "( 3959 * acos( cos( radians(".$latitude.") ) * cos( radians( plc_latitude ) ) * cos( radians( plc_longitude ) - radians(".$longitude.") ) + sin( radians(".$latitude.") ) * sin( radians( plc_latitude ) ) ) ) AS distance 
                     FROM yb_places plc   
                     LEFT JOIN yb_countrymst c ON plc.plc_country_id = c.country_id 
                     LEFT JOIN yb_statemst s ON plc.plc_state_id = s.state_id
                     WHERE plc.plc_is_delete = 0 AND plc.plc_is_active = 1 
                     HAVING distance < 50
                     ORDER BY distance ";
-
+                
                 return $strSqlSearch;
-        }
+        }               
           
         
         /**
@@ -34,8 +35,11 @@
          * @param type $latitude
          * @param type $longitude
          * @return array
+         * 
+         *  !!! IMPORTANT !!!
+         *      This function returns place array not object
          */
-        function getPlacesFromLocation($obj,$latitude,$longitude){
+        function getPlacesFromLocationArray($obj,$latitude,$longitude){
                         
                 $memLocation = array();
                 $memResult = $obj->executeSql(getPlacesQuery($latitude,$longitude));
@@ -48,13 +52,131 @@
                         if($plc_Cover_Image)
                             $place_img = $plc_Cover_Image['plc_gallery_media'];
                         else
-                            $place_img = '';
-                        array_push($memLocation, array($memResultData['plc_id'], htmlentities($memResultData['plc_name']), $memResultData['plc_latitude'],$memResultData['plc_longitude'],$place_img,$memResultData['plc_header_image'], base64_encode($memResultData['plc_id']),$memResultData['plc_email'],$memResultData['plc_contact'],$memResultData['plc_website'],htmlentities($memResultData['plc_city']),$memResultData['state_name'],$memResultData['state_abbr'],$memResultData['country_name']));
+                            $place_img = '';                        
+                        
+                        array_push($memLocation, array($memResultData['plc_id'], htmlentities($memResultData['plc_name']), $memResultData['plc_latitude'],$memResultData['plc_longitude'],$place_img,$memResultData['plc_header_image'], base64_encode($memResultData['plc_id']),$memResultData['plc_email'],$memResultData['plc_contact'],$memResultData['plc_website'],htmlentities($memResultData['plc_city']),$memResultData['state_name'],$memResultData['state_abbr'],$memResultData['country_name']));                        
                     }
                 }
                 //array_push($memLocation, array($memResultData['plc_id'].",".$memResultData['plc_name'].",".$memResultData['plc_header_image'].",".$memResultData['plc_email'].",".$memResultData['plc_contact'].",".$memResultData['plc_website'].",".$memResultData['plc_city'].",".$memResultData['state_name'].",".$memResultData['state_abbr'].",".$memResultData['country_name'],$memResultData['plc_latitude'],$memResultData['plc_longitude']));
 
                 return $memLocation;            
+        }
+        
+        
+        /**
+         * 
+         * @param type $latitude
+         * @param type $longitude
+         * @return array
+         * 
+         */
+        function getPlacesFromLocation($obj,$latitude,$longitude,$subcatid){            
+                include_once '../api/class/PlaceClass.php';
+                
+                                                                                                        
+//                    $strSqlSearch = "SELECT "
+//                            . "*,"
+//                            . "( 3959 * acos( cos( radians(".$latitude.") ) * cos( radians( plc_latitude ) ) * cos( radians( plc_longitude ) - radians(".$longitude.") ) + sin( radians(".$latitude.") ) * sin( radians( plc_latitude ) ) ) ) AS distance 
+//                        FROM yb_places plc   
+//                        LEFT JOIN yb_places_category cat ON plc.plc_id = cat.plc_id 
+//                        LEFT JOIN yb_countrymst c ON plc.plc_country_id = c.country_id 
+//                        LEFT JOIN yb_statemst s ON plc.plc_state_id = s.state_id 
+//                        LEFT JOIN yb_places_rating r ON plc.plc_id = r.plc_id AND r.places_rating_is_active = 1
+//                        WHERE plc.plc_is_delete = 0 AND plc.plc_is_active = 1 AND cat.plc_sub_cat_id = " .$subcatid. "  
+//                        HAVING distance < 50
+//                        ORDER BY distance "; 
+                    
+                
+                $strSqlSearch = "SELECT "
+                        . "*,"
+                        . "( 3959 * acos( cos( radians(".$latitude.") ) * cos( radians( plc_latitude ) ) * cos( radians( plc_longitude ) - radians(".$longitude.") ) + sin( radians(".$latitude.") ) * sin( radians( plc_latitude ) ) ) ) AS distance 
+                    FROM yb_places plc                            
+                    LEFT JOIN yb_countrymst c ON plc.plc_country_id = c.country_id 
+                    LEFT JOIN yb_statemst s ON plc.plc_state_id = s.state_id 
+                    LEFT JOIN yb_places_rating r ON plc.plc_id = r.plc_id AND r.places_rating_is_active = 1
+                    WHERE plc.plc_is_delete = 0 AND plc.plc_is_active = 1   
+                    HAVING distance < 50
+                    ORDER BY distance ";                                 
+                                                
+                $memLocation = array();
+                $memResult = $obj->executeSql($strSqlSearch);
+                if($memResult){
+                    while($memResultData = mysql_fetch_array($memResult)){
+                        
+                        //array_push($memLocation, array($memResultData['plc_id'].",".$memResultData['plc_name'].",".$memResultData['plc_header_image'].",".$memResultData['plc_email'].",".$memResultData['plc_contact'].",".$memResultData['plc_website'].",".$memResultData['plc_city'].",".$memResultData['state_name'].",".$memResultData['state_abbr'].",".$memResultData['country_name'],$memResultData['plc_latitude'],$memResultData['plc_longitude']));
+                        $where = 'plc_id = '.$memResultData['plc_id'].' AND plc_gallery_is_active = 1 AND plc_is_cover_image = 1';
+                        $plc_Cover_Image = $obj->selectQuery('yb_place_gallery', 'plc_gallery_media', $where, $order_col = '', $order_by = '', $group_by='', $disQuery = '',1);
+                        if($plc_Cover_Image)
+                            $place_img = $plc_Cover_Image['plc_gallery_media'];
+                        else
+                            $place_img = '';
+                                                                        
+                        $place = new Place();                                   
+                        $place->plc_id = $memResultData[0];
+                        $place->plc_name = $memResultData[1];
+                        $place->plc_header_image = $memResultData[2];
+                        $place->plc_email = $memResultData[3];
+                        $place->plc_contact = $memResultData[4];
+                        $place->plc_website = $memResultData[5];
+                        $place->plc_intime = $memResultData[6];
+                        $place->plc_outtime = $memResultData[7];
+                        $place->plc_country_id = $memResultData[9];
+                        $place->plc_state_id = $memResultData[10];
+                        $place->plc_city = $memResultData[11];
+                        $place->plc_address = htmlentities($memResultData[12]);
+                        $place->plc_latitude = $memResultData['plc_latitude'];
+                        $place->plc_longitude = $memResultData['plc_longitude'];  
+                        
+                        $place->rating = getPlacesRating($obj,$place->plc_id);
+                        
+                        $strSqlAverageRating = "SELECT AVG(r.place_rating_rating) AS rating_avg FROM yb_places plc                                           
+                            LEFT JOIN yb_places_rating r ON plc.plc_id = r.plc_id AND r.places_rating_is_active = 1                             
+                            WHERE plc.plc_is_delete = 0 AND plc.plc_is_active = 1 AND plc.plc_id = " .$place->plc_id 
+                            . " GROUP BY r.place_rating_rating" ;                                
+                        $memAvgResult = $obj->executeSql($strSqlAverageRating);
+                        if($memAvgResult){
+                            $place->plc_avg_rating = mysql_fetch_array($memAvgResult)['rating_avg'];
+                        }
+                        
+                        array_push($memLocation,$place);
+                    }
+                }                
+
+                return $memLocation;            
+        }
+                        
+        
+        /**
+         * 
+         * @param type $obj
+         * @param type $place_id
+         * @return array
+         */
+        function getPlacesRating($obj, $place_id){            
+                include_once '../api/class/PlacesRating.php';                            
+                
+                $strSqlSearch = "SELECT * FROM yb_places plc                                           
+                    LEFT JOIN yb_places_rating r ON plc.plc_id = r.plc_id AND r.places_rating_is_active = 1
+                    WHERE plc.plc_is_delete = 0 AND plc.plc_is_active = 1 AND plc.plc_id = " .$place_id ;                                
+                
+                $memLocation = array();
+                $memResult = $obj->executeSql($strSqlSearch);
+                if($memResult){
+                    while($memResultData = mysql_fetch_array($memResult)){                        
+                        $placeRating = new PlaceRating();                                                    
+                        $placeRating->place_rating_id = $memResultData['place_rating_id'];
+                        $placeRating->place_rating_rating = $memResultData['place_rating_rating'];
+                        $placeRating->place_rating_comment = $memResultData['place_rating_comment'];
+                        $placeRating->places_rating_by = $memResultData['places_rating_by'];
+                        $placeRating->places_rating_created_date = $memResultData['places_rating_created_date'];
+                        $placeRating->places_rating_modified_date = $memResultData['places_rating_modified_date'];
+                        $placeRating->places_rating_is_active = $memResultData['places_rating_is_active']; 
+                        
+                        if($memResultData['plc_id']!=null)
+                            array_push($memLocation,$placeRating);
+                    }
+                }                
+                return array_filter($memLocation); 
         }
         
         

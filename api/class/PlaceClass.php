@@ -23,7 +23,9 @@ class Place{
         public $plc_contact;
         public $plc_website;
         public $plc_country_id;
+        public $plc_country_name;
         public $plc_state_id;
+        public $plc_state_name;
         public $plc_city;
         public $plc_address;
         public $plc_zip;
@@ -34,6 +36,11 @@ class Place{
         public $plc_info;
         public $plc_is_active;
         public $plc_is_delete;
+        public $plc_intime;
+        public $plc_outtime; 
+        public $plc_avg_rating; 
+        
+        public $rating = Array();
         
         /*******************************************
          ************** CONSTRUCTOR ****************
@@ -41,6 +48,8 @@ class Place{
         function __construct() {
             
         }                
+                
+        
         
         /**
          * 
