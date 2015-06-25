@@ -21,10 +21,10 @@
     $param_subcategoryid= isset($_GET['scat_id']) ? mysql_real_escape_string($_GET['scat_id']) : null;
     $param_plc_id       = isset($_GET['plc_id']) ? mysql_real_escape_string($_GET['plc_id']) : null; 
     $param_src_key      = isset($_GET['src_key']) ? mysql_real_escape_string($_GET['src_key']) : ''; 
-    $param_src_ekey     = isset($_GET['src_ekey']) ? mysql_real_escape_string($_GET['src_ekey']) : 0; 
+    $param_src_ekey     = isset($_GET['src_ekey']) ? mysql_real_escape_string($_GET['src_ekey']) : 0;           // ekey --> exact serch 
     $param_src_cat      = isset($_GET['src_cat']) ? $_GET['src_cat'] : null;                                    // --GUPPY COMMENT IMPORTANT-- Burada "mysql_real_escape_string" kullanılacaktır
-    $param_src_fea      = isset($_GET['src_fea']) ? mysql_real_escape_string($_GET['src_fea']) : null;
-    $param_src_pg       = isset($_GET['src_pg']) ?  mysql_real_escape_string($_GET['src_pg']) : 0;    
+    $param_src_fea      = isset($_GET['src_fea']) ? $_GET['src_fea'] : null;
+    $param_src_pg       = isset($_GET['src_pg']) ?  $_GET['src_pg'] : 0;    
     $result             = Result::$SUCCESS_EMPTY;
     $resultError        = "";
       
@@ -56,11 +56,21 @@
             
         }else if(strcmp(strtolower($param_op),"search")==0){
             
-            if($jsondata){
+            // --- FILTERING ---
+            // --- If json data does not exist then FETCH ALL places
+            if($jsondata){                
                 
-                $json_subcategory_list = $jsondata['subcat_list'];                
-                $fetchPlaces = fetchPlaces($obj, $param_src_key, $param_src_ekey, $json_subcategory_list, $param_src_fea, $param_src_pg );
-                $result = Result::$SUCCESS->setContent($fetchPlaces);                 
+                $json_subcategory_list = array_key_exists('subcat_list',$jsondata) ? $jsondata['subcat_list'] : null;
+                $json_keyword = array_key_exists('keyword',$jsondata) ? $jsondata['keyword'] : null;
+                
+                if($json_subcategory_list || $json_keyword){
+                    $fetchPlaces = fetchPlaces($obj, $json_keyword, $param_src_ekey, $json_subcategory_list, $param_src_fea, $param_src_pg );
+                    $result = Result::$SUCCESS->setContent($fetchPlaces);
+                    
+                }else{
+                    $resultError = "Search Operation parameter mismatch";
+                    $result = Result::$FAILURE_PARAM_MISMATCH->setContent($resultError);
+                }
                 
             }else{
                 $fetchPlaces = fetchPlaces($obj, $param_src_key, $param_src_ekey, $param_src_cat, $param_src_fea, $param_src_pg );
