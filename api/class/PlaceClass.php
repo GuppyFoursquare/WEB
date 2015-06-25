@@ -61,6 +61,9 @@ class Place{
         
         /**
          * 
+         * @param type $place
+         * 
+         * This method used to get values from mysql_fetch_object's variable
          */
         function setPlaceObjectCoreVariables($place){
             $this->plc_id = $place->plc_id;            

@@ -35,49 +35,36 @@
          * 
          * @param type $latitude
          * @param type $longitude
-         * @return array
+         * @return array         
          * 
          */
         function getPlacesFromLocation($obj,$latitude,$longitude,$subcatid){
-                include '../api/class/PlaceClass.php';
+                include '../api/class/PlaceClass.php';                
                 
-//                    $strSqlSearch = "SELECT "
-//                            . "*,"
-//                            . "( 3959 * acos( cos( radians(".$latitude.") ) * cos( radians( plc_latitude ) ) * cos( radians( plc_longitude ) - radians(".$longitude.") ) + sin( radians(".$latitude.") ) * sin( radians( plc_latitude ) ) ) ) AS distance 
-//                        FROM yb_places plc   
-//                        LEFT JOIN yb_places_category cat ON plc.plc_id = cat.plc_id 
-//                        LEFT JOIN yb_countrymst c ON plc.plc_country_id = c.country_id 
-//                        LEFT JOIN yb_statemst s ON plc.plc_state_id = s.state_id 
-//                        LEFT JOIN yb_places_rating r ON plc.plc_id = r.plc_id AND r.places_rating_is_active = 1
-//                        WHERE plc.plc_is_delete = 0 AND plc.plc_is_active = 1 AND cat.plc_sub_cat_id = " .$subcatid. "  
-//                        HAVING distance < 50
-//                        ORDER BY distance "; 
-                
-                
-                
-//                $strSqlSearch = "SELECT "
-//                        . "*,plc.plc_id AS plc_id,"
-//                        . "( 3959 * acos( cos( radians(".$latitude.") ) * cos( radians( plc_latitude ) ) * cos( radians( plc_longitude ) - radians(".$longitude.") ) + sin( radians(".$latitude.") ) * sin( radians( plc_latitude ) ) ) ) AS distance 
-//                    FROM yb_places plc                            
-//                    LEFT JOIN yb_countrymst c ON plc.plc_country_id = c.country_id 
-//                    LEFT JOIN yb_statemst s ON plc.plc_state_id = s.state_id 
-//                    LEFT JOIN yb_places_rating r ON plc.plc_id = r.plc_id AND r.places_rating_is_active = 1
-//                    WHERE plc.plc_is_delete = 0 AND plc.plc_is_active = 1   
-//                    HAVING distance < 50
-//                    ORDER BY distance "; 
-                                
-                
-                $tblName = " yb_places plc                            
+                // --- DEFAULT QUERY ---
+                $tblName = " yb_places plc                                     
                     LEFT JOIN yb_countrymst c ON plc.plc_country_id = c.country_id 
-                    LEFT JOIN yb_statemst s ON plc.plc_state_id = s.state_id 
-                    LEFT JOIN yb_places_rating r ON plc.plc_id = r.plc_id AND r.places_rating_is_active = 1 ";
+                    LEFT JOIN yb_statemst s ON plc.plc_state_id = s.state_id                     
+                    LEFT JOIN yb_places_rating r ON plc.plc_id = r.plc_id AND r.places_rating_is_active = 1 ";                
                 
-                $disCol = " *,plc.plc_id AS plc_id,  ( 3959 * acos( cos( radians(".$latitude.") ) * cos( radians( plc_latitude ) ) * cos( radians( plc_longitude ) - radians(".$longitude.") ) + sin( radians(".$latitude.") ) * sin( radians( plc_latitude ) ) ) ) AS distance ";
+                $disCol = " *,plc.plc_id AS plc_id, ";
+                $disCol = $disCol . " ( 3959 * acos( cos( radians(".$latitude.") ) * cos( radians( plc_latitude ) ) * cos( radians( plc_longitude ) - radians(".$longitude.") ) + sin( radians(".$latitude.") ) * sin( radians( plc_latitude ) ) ) ) AS distance ";
                 $where = " plc.plc_is_delete = 0 AND plc.plc_is_active = 1 ";
                 $having = " distance < 50 ";
                 $order_col = " distance ";
                 $order_by = '';
                 $group_by = '';
+                
+                // --- SETTING QUERY WITH GIVEN PARAMETERS ---
+                if($subcatid){
+                    $tblName    = $tblName . " LEFT JOIN yb_places_category cat ON plc.plc_id = cat.plc_id ";
+                    $where      = $where . " AND cat.plc_sub_cat_id = " .$subcatid;
+                }
+                 
+                // --- NEW PARAMETER WILL ADDED HERE ---
+                // --- NEW PARAMETER WILL ADDED HERE ---
+                // --- NEW PARAMETER WILL ADDED HERE ---
+                // such as $distance
 
                 $qry = "SELECT " . $disCol . " FROM " . $tblName;
 
