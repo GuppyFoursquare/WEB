@@ -48,6 +48,7 @@ class Place{
         public $plc_avg_rating; 
         
         // --- THIS VALUES ARE RELEVANT WITH OTHER TABLES ---
+        public $gallery = Array();
         public $rating = Array();
         
         /*******************************************

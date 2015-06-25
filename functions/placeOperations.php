@@ -126,7 +126,7 @@
          * @return array
          */
         function getPlacesRating($obj, $place_id){            
-                include_once '../api/class/PlacesRating.php';                            
+                include_once '../api/class/PlacesRating.php';
                 
                 $strSqlSearch = "SELECT * FROM yb_places plc                                           
                     LEFT JOIN yb_places_rating r ON plc.plc_id = r.plc_id AND r.places_rating_is_active = 1
@@ -153,6 +153,28 @@
         }
         
         
+        
+        function getPlaceGallery($obj, $place_id){
+                include_once '../api/class/Gallery.php';                
+                
+                $strSqlSearch = "SELECT * FROM yb_place_gallery gal
+                    WHERE gal.plc_id=" . $place_id;                               
+
+                $memLocation = array();
+                $memResult = $obj->executeSql($strSqlSearch);
+                if($memResult){
+                    while($memResultData = mysql_fetch_object($memResult, 'Gallery')){                        
+                        //--- Create & Fetch to Place object
+                        $gallery = new Gallery();
+                        $gallery->setPlaceObjectCoreVariables($memResultData);
+                                                
+                        array_push($memLocation,$gallery);
+                    }
+                }                 
+                return array_filter($memLocation);            
+        }
+        
+        
         /**
          * 
          * @param type $obj
@@ -160,41 +182,49 @@
          * 
          * This function return place with a given id
          */
-        function getPlaceFromID($obj,$param_plc_id){
-            
+        function getPlaceFromID($obj,$param_plc_id){            
+                include '../api/class/PlaceClass.php';
+                
                 $tblName = " yb_places plc ";
-                $disCol = " plc.plc_id,"
-                        . "plc.plc_name,"
-                        . "plc.plc_header_image,"
-                        . "plc.plc_email,"
-                        . "plc.plc_contact,"
-                        . "plc.plc_website,"
-                        . "plc.plc_intime,"
-                        . "plc.plc_outtime,"
-                        . "plc.plc_country_id,"
-                        . "plc.plc_state_id,"
-                        . "plc.plc_city,"
-                        . "plc.plc_address,"
-                        . "plc.plc_meta_description,"
-                        . "plc.plc_keywords,"
-                        . "plc.plc_zip,"
-                        . "plc.plc_latitude,"
-                        . "plc.plc_longitude,"
-                        . "plc.plc_menu,"
-                        . "plc.plc_info_title,"
-                        . "plc.plc_info_title";
+                
+                $disCol = " * ";
 
                 $where = " plc.plc_is_active=1 "
                         . " AND plc.plc_is_delete=0 "
                         . " AND plc.plc_id=" . $param_plc_id . " ";
 
-                $order_col = '';
-                $order_by = '';              
+                
+                $qry = "SELECT " . $disCol . " FROM " . $tblName;
 
-                $fetchPlace = $obj->selectQuery($tblName, $disCol, $where, $order_col, $order_by , $group_by='', $disQuery = '');
-                $fetchPlace = utf8ize($fetchPlace);  
-            
-                return $fetchPlace;
+                if ($where != '')
+                    $qry .= " WHERE " . $where;
+
+                //for display query
+                if (!empty($disQuery)) {
+                    echo $qry;
+                    die;
+                } 
+                
+                $memLocation = array();
+                $memResult = $obj->executeSql($qry);
+                if($memResult){
+                    while($memResultData = mysql_fetch_object($memResult, 'Place')){
+                        
+                        //--- Create & Fetch to Place object
+                        $place = new Place();
+                        $place->setPlaceObjectCoreVariables($memResultData);
+                        
+                        //--- Comments are fetched ----
+                        $place->gallery = getPlaceGallery($obj,$place->plc_id);
+                        
+                        //--- Comments are fetched ----
+                        $place->rating = getPlacesRating($obj,$place->plc_id);
+                        
+                        array_push($memLocation,$place);                       
+                    }
+                }
+                       
+                return $place;
         }
         
         
@@ -258,7 +288,7 @@
                     else
                     {
                         //$where .= " AND plc.plc_name LIKE '%".$searchText."%' ";
-                                    $where .= " AND (plc.plc_name LIKE '%".$searchText."%' OR pCat.cat_name LIKE '%".$searchText."' OR subCat.cat_name LIKE '%".$searchText."')";
+                        $where .= " AND (plc.plc_name LIKE '%".$searchText."%' OR pCat.cat_name LIKE '%".$searchText."' OR subCat.cat_name LIKE '%".$searchText."')";
                     }
                 }
                 //echo (!empty($categories));die;

@@ -1,11 +1,11 @@
 <?php
 
 /******************** PAGE DETAILS ********************/
-/* @Programmer  : Guppy Org.
+/* @Programmer  : Kemal Sami KARACA
  * @Maintainer  : Guppy Org.
  * @Created     : 14/06/2015
- * @Modified    : 16/06/2015
- * @Description : This is the category API
+ * @Modified    : 25/06/2015
+ * @Description : This is the place API
 ********************************************************/    
    
     include("../prepend.php");        

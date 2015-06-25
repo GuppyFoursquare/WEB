@@ -3,7 +3,8 @@
 /* @Programmer  : T.K.
  * @Maintainer  : T.K.
  * @Created     : 29 Dec 2014
- * @Modified    : 
+ * @Modified    : Kemal Sami KARACA
+ * @Date        : 25/06/2015
  * @Description : This file use for database connection. 
 ********************************************************/
 error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
@@ -12,18 +13,22 @@ error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
 //----- DATABASE HOST -----//
 //define('DB_HOST', "127.0.0.3");
 define('DB_HOST', "localhost");
+//define('DB_HOST', "localhost");
 
 //----- DATABASE NAME -----//
 //define('DB_DATABASE', "db454503");
 define('DB_DATABASE', "youbaku");
+//define('DB_DATABASE', "beratald_youbaku");
 
 //----- DATABASE USERNAME -----//
 //define('DB_USERNAME', "db454503");
 define('DB_USERNAME', "root");
+//define('DB_USERNAME', "beratald_youbaku");
 
 //----- DATABASE PASSWORD -----//
 //define('DB_PASSWORD', "TkEeMQ7v");
 define('DB_PASSWORD', "");
+//define('DB_PASSWORD', "Kemal1234");
 
 
 //mysql_connect(DB_HOST, DB_USERNAME, DB_PASSWORD) or die("Error: Could not connect to the server.");
