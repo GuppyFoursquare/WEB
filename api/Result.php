@@ -61,13 +61,28 @@
             }
         }
         
-        /*
-        function apiSuccess($resVal){
-            $this->status = ResultGuppy001Status;
-            $this->code   = ResultGuppy001Code;
-            $this->content = $resVal;
-        }
+        /**
+         * 
+         * @param type $obj
+         * @return type
+         * 
+         * This function removes null values from object
          */
+        static function object_unset_nulls($obj)
+        {            
+            $arrObj = is_object($obj) ? get_object_vars($obj) : $obj;
+            foreach($arrObj as $key => $val)
+            {
+                $val = (is_array($val) || is_object($val)) ? Result::object_unset_nulls($val) : $val;
+                if (is_array($obj))
+                    $obj[$key] = $val;
+                else
+                    $obj->$key = $val;
+                if($val == null)
+                    unset($obj->$key);
+            }
+            return $obj;
+        }                
         
     }
 

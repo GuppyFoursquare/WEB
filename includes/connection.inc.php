@@ -27,8 +27,11 @@ define('DB_PASSWORD', "");
 
 
 //mysql_connect(DB_HOST, DB_USERNAME, DB_PASSWORD) or die("Error: Could not connect to the server.");
-@mysql_connect(DB_HOST, DB_USERNAME, DB_PASSWORD) or die(mysql_error());
+$conn = @mysql_connect(DB_HOST, DB_USERNAME, DB_PASSWORD) or die(mysql_error());
 mysql_select_db(DB_DATABASE) or die("Error: Could not select database");
+
+//Set mysql to fetch utf-8 characters
+mysql_query("SET character_set_results = 'utf8', character_set_client = 'utf8', character_set_connection = 'utf8', character_set_database = 'utf8', character_set_server = 'utf8'", $conn);
 
 //----- DATABASE TABLE PREFIX -----//
 $prefix = "yb_";
