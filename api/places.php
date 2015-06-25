@@ -13,7 +13,8 @@
     //include("./class/PlaceClass.php");
     
     error_reporting(E_ALL);
-    
+        
+    // --- Default Content-type ---
     $param_op           = isset($_GET['op']) ? mysql_real_escape_string($_GET['op']) : null; 
     $param_latitude     = isset($_GET['lat']) ? mysql_real_escape_string($_GET['lat']) : null; 
     $param_longitude    = isset($_GET['lon']) ? mysql_real_escape_string($_GET['lon']) : null;     
@@ -21,11 +22,15 @@
     $param_plc_id       = isset($_GET['plc_id']) ? mysql_real_escape_string($_GET['plc_id']) : null; 
     $param_src_key      = isset($_GET['src_key']) ? mysql_real_escape_string($_GET['src_key']) : ''; 
     $param_src_ekey     = isset($_GET['src_ekey']) ? mysql_real_escape_string($_GET['src_ekey']) : 0; 
-    $param_src_cat      = isset($_GET['src_cat']) ? mysql_real_escape_string($_GET['src_cat']) : null;
+    $param_src_cat      = isset($_GET['src_cat']) ? $_GET['src_cat'] : null;                                    // --GUPPY COMMENT IMPORTANT-- Burada "mysql_real_escape_string" kullanılacaktır
     $param_src_fea      = isset($_GET['src_fea']) ? mysql_real_escape_string($_GET['src_fea']) : null;
     $param_src_pg       = isset($_GET['src_pg']) ?  mysql_real_escape_string($_GET['src_pg']) : 0;    
     $result             = Result::$SUCCESS_EMPTY;
     $resultError        = "";
+      
+    // --- Content-type :: application/json ---
+    $jsondata           = json_decode(file_get_contents('php://input'), true);
+    
     
     if($param_op)
     {        
@@ -51,10 +56,16 @@
             
         }else if(strcmp(strtolower($param_op),"search")==0){
             
-            //fetchPlaces($obj,$searchText = '',$exactSearch = 0,$categories = '',$features = '',$page = 0,$allRec = 0){    
-            $fetchPlaces = fetchPlaces($obj, $param_src_key, $param_src_ekey, $param_src_cat, $param_src_fea, $param_src_pg );
-            $result = Result::$SUCCESS->setContent($fetchPlaces); 
-            
+            if($jsondata){
+                
+                $json_subcategory_list = $jsondata['subcat_list'];                
+                $fetchPlaces = fetchPlaces($obj, $param_src_key, $param_src_ekey, $json_subcategory_list, $param_src_fea, $param_src_pg );
+                $result = Result::$SUCCESS->setContent($fetchPlaces);                 
+                
+            }else{
+                $fetchPlaces = fetchPlaces($obj, $param_src_key, $param_src_ekey, $param_src_cat, $param_src_fea, $param_src_pg );
+                $result = Result::$SUCCESS->setContent($fetchPlaces); 
+            }
         }else{
             $resultError = "Operation parameter mismatch";
             $result = Result::$FAILURE_PARAM_MISMATCH->setContent($resultError);
