@@ -29,7 +29,7 @@
                 
                 return $strSqlSearch;
         }               
-                          
+                        
         
         /**
          * 
@@ -39,7 +39,7 @@
          * 
          */
         function getPlacesFromLocation($obj,$latitude,$longitude,$subcatid){
-                include '../api/class/PlaceClass.php';                
+                include '../api/class/PlaceClass.php';                                
                 
                 // --- DEFAULT QUERY ---
                 $tblName = " yb_places plc                                     
@@ -49,11 +49,14 @@
                 
                 $disCol = " *,plc.plc_id AS plc_id, ";
                 $disCol = $disCol . " ( 3959 * acos( cos( radians(".$latitude.") ) * cos( radians( plc_latitude ) ) * cos( radians( plc_longitude ) - radians(".$longitude.") ) + sin( radians(".$latitude.") ) * sin( radians( plc_latitude ) ) ) ) AS distance ";
+                //$disCol = $disCol . " sin(radians(plc_latitude - ".$latitude.")/2) * sin(radians(plc_latitude - ".$latitude.")/2) + cos(radians(".$latitude.")) * cos(radians(plc_latitude)) * sin(radians(plc_longitude - ".$longitude.")/2) * sin(radians(plc_longitude - ".$longitude.")/2) AS distanceA, ";
+                //$disCol = $disCol . " 6371 * 2 * atan2(sqrt(distanceA), sqrt(1-distanceA)) AS distance ";
                 $where = " plc.plc_is_delete = 0 AND plc.plc_is_active = 1 ";
                 $having = " distance < 50 ";
                 $order_col = " distance ";
                 $order_by = '';
                 $group_by = '';
+                                                
                 
                 // --- SETTING QUERY WITH GIVEN PARAMETERS ---
                 if($subcatid){
@@ -66,8 +69,8 @@
                 // --- NEW PARAMETER WILL ADDED HERE ---
                 // such as $distance
 
-                $qry = "SELECT " . $disCol . " FROM " . $tblName;
-
+                $qry = "SELECT " . $disCol . " FROM " . $tblName;                
+                
                 if ($where != '')
                     $qry .= " WHERE " . $where;
 
@@ -87,8 +90,8 @@
                 if (!empty($disQuery)) {
                     echo $qry;
                     die;
-                }                                          
-                                                
+                }                                                                   
+                
                 $memLocation = array();
                 $memResult = $obj->executeSql($qry);
                 if($memResult){
@@ -319,7 +322,8 @@
                 }
 
 
-                $plcArr = $obj->selectQuery($tblName, $disCol, $where, $order_col, $order_by , $group_by='', $disQuery = '');    
+                $plcArr = $obj->selectQuery($tblName, $disCol, $where, $order_col, $order_by , $group_by='', $disQuery = '');                                   
+                
                 $flag = 0;
                 $final_array = array();
                 if($exactSearch)
@@ -412,6 +416,140 @@
         }
         
         
+        
+        /**
+         *
+         */
+        function fetchPlacesFromJsonData($obj,$jsonData){               
+            
+                include '../api/class/PlaceClass.php';                                
+            
+                // --- QUERY PART ---
+                // --- DEFAULT CASE ---
+                $tblName =  " yb_places plc"
+                            . " LEFT JOIN yb_places_category plc_cat ON plc.plc_id = plc_cat.plc_id "
+                            . " LEFT JOIN yb_places_features plc_fea ON plc.plc_id = plc_fea.plc_id " ;
+                
+                $disCol     = " *,plc.plc_id AS plc_id ";
+                $where      = " plc.plc_is_active  = 1 AND plc.plc_is_delete = 0 ";
+                $having     = "";
+                $order_col  = "";
+                $order_by   = "";
+                $group_by   = "";
+                                                
+                $page=0;
+                $limit = 6;                
+                
+                if(isset($_SESSION['is_most_popular']))
+                {
+                    if($_SESSION['is_most_popular'] == 1){                                            
+                        $tblName = $tblName." JOIN yb_places_rating plc_r ON (plc_r.plc_id = plc.plc_id) ";
+                        $disCol = " AVG(plc_r.place_rating_rating) as avg_rate,plc.plc_id,f.feature_id,f.feature_title,subCat.cat_parent_id,pCat.cat_name as pcat_name,plc.plc_name,plc.plc_header_image,plc_gallery_media,plc.plc_email,plc.plc_contact,plc.plc_website,plc.plc_country_id,plc.plc_state_id,plc.plc_city,plc.plc_address,plc.plc_zip,plc.plc_latitude,plc.plc_longitude,plc.plc_menu,plc.plc_info_title,plc.plc_info,plc.plc_is_active,plc.plc_is_delete ";
+                        $order_col = 'avg_rate';
+                        $order_by = ' DESC';
+                    }                    
+                }                
+                
+                // --- JSON PART ---               
+                if(array_key_exists('subcat_list',$jsonData)){
+                    $where      .= " AND plc_cat.plc_sub_cat_id IN (". implode(',',$jsonData['subcat_list']).") ";
+                }
+                
+                if(array_key_exists('feature_list',$jsonData)){
+                    $where      .= " AND plc_fea.feature_id IN (". implode(',',$jsonData['feature_list']).") ";
+                }
+                
+                if(array_key_exists('location',$jsonData)){
+                    $location_obj = $jsonData['location'];                    
+                    if(array_key_exists('latitude',$location_obj) && array_key_exists('longitude',$location_obj)){                        
+                        $tblName    = "(SELECT plc_id,sin(radians(plc_latitude - ". $location_obj['latitude'] .")/2) * sin(radians(plc_latitude - ".$location_obj['latitude'].")/2) + cos(radians(".$location_obj['latitude'].")) * cos(radians(plc_latitude)) * sin(radians(plc_longitude - ".$location_obj['longitude'].")/2) * sin(radians(plc_longitude - ".$location_obj['longitude'].")/2) AS haversine  FROM yb_places WHERE plc_is_delete = 0 AND plc_is_active = 1) hav, " . $tblName ;
+                        $disCol     .= ",6371 * 2 * atan2(sqrt(haversine), sqrt(1-haversine)) AS distance";
+                        $where      .= " AND hav.plc_id=plc.plc_id "; 
+                        
+                        $distance = array_key_exists('distance',$location_obj) ? $location_obj['distance'] : 50;                                                
+
+                        $having = strlen($having)>0 ? ($having . " AND distance < ".$distance) : (" distance < ".$distance);                       
+                        $order_col = " distance ";                        
+                    }
+                }
+                
+                if(array_key_exists('keyword',$jsonData)){  
+                    
+                    $tblName    .= " LEFT JOIN yb_category cat ON (plc_cat.plc_sub_cat_id=cat.cat_id) "
+                                    . "LEFT JOIN yb_category scat ON (plc_cat.plc_sub_cat_id = scat.cat_id)" ;
+                    
+                    $searchText = trim($jsonData['keyword']);
+                    if(!empty($searchText)){
+                        if(false && $exactSearch)
+                        {
+                            $where .= " AND plc.plc_name LIKE '".$searchText."' ";
+                        }
+                        else
+                        {                                                        
+                            $where .= " AND (plc.plc_name LIKE '%".$searchText."%' OR cat.cat_name LIKE '%".$searchText."' OR scat.cat_name LIKE '%".$searchText."')";
+                        }
+                    }
+                }                                   
+                                
+                if(array_key_exists('allRec',$jsonData)){
+                    $where .= " GROUP BY plc.plc_id ";
+                }else{                    
+                    $where .= " GROUP BY plc.plc_id";
+                    $order_by .=" LIMIT ".$page.",".$limit." ";                                        
+                }  
+                
+                
+                $qry = "SELECT " . $disCol . " FROM " . $tblName;                
+                if ($where != '')
+                    $qry .= " WHERE " . $where;
+
+                if ($having != '')
+                    $qry .= " HAVING " . $having;
+
+                if ($order_col != '')
+                    $qry .= " ORDER BY " . $order_col;
+
+                if ($order_by != '')
+                    $qry .= $order_by;
+
+                if ($group_by != '')
+                    $qry .= ' GROUP BY ' . $group_by;
+                                
+                
+                
+                // --- EXECUTE PART ---
+                $memLocation = array();
+                $memResult = $obj->executeSql($qry);                
+                if($memResult){
+                    while($memResultData = mysql_fetch_object($memResult, 'Place')){
+                        
+                        //--- Create & Fetch to Place object
+                        $place = new Place();
+                        $place->setPlaceObjectCoreVariables($memResultData);
+                        
+                        //--- Comments are fetched ----
+                        $place->rating = getPlacesRating($obj,$place->plc_id);
+                        
+                        //--- Returns average rating of place ---
+                        $strSqlAverageRating = "SELECT AVG(r.place_rating_rating) AS rating_avg FROM yb_places plc                                           
+                            LEFT JOIN yb_places_rating r ON plc.plc_id = r.plc_id AND r.places_rating_is_active = 1                             
+                            WHERE plc.plc_is_delete = 0 AND plc.plc_is_active = 1 AND plc.plc_id = " .$place->plc_id 
+                            . " GROUP BY r.place_rating_rating" ;                                
+                        $memAvgResult = $obj->executeSql($strSqlAverageRating);
+                        if($memAvgResult){
+                            $place->plc_avg_rating = mysql_fetch_array($memAvgResult)['rating_avg'];
+                        }                                                
+                        
+                        array_push($memLocation,$place);
+                    }
+                }                
+                                
+                return $memLocation;                                
+        }
+        
+        
+        
+        
         /**    
         * @author GUPPY Org. <kskaraca@gmail.com>
         * @param type $d array object
@@ -421,15 +559,36 @@
         * This function is used for encoding objects to JSON
         * properly.
         */
-       function utf8ize($d) {
-           if (is_array($d)) {
-               foreach ($d as $k => $v) {
-                   $d[$k] = utf8ize($v);
-               }
-           } else if (is_string ($d)) {
-               return utf8_encode($d);
-           }
-           return $d;
+        function utf8ize($d) {
+            if (is_array($d)) {
+                foreach ($d as $k => $v) {
+                    $d[$k] = utf8ize($v);
+                }
+            } else if (is_string ($d)) {
+                return utf8_encode($d);
+            }
+            return $d;
+        }
+       
+        /**
+         * 
+         * @param type $lat1
+         * @param type $lon1
+         * @param type $lat2
+         * @param type $lon2
+         * @return type
+         * 
+         * This function calculate distance between two points
+         */
+        function calculateDistance($lat1, $lon1, $lat2, $lon2){
+            $R = 6371; // Radius of the earth in km
+            $dLat = deg2rad($lat2-$lat1);  // deg2rad below
+            $dLon = deg2rad($lon2-$lon1); 
+            $a = sin(deg2rad($lat2-$lat1)/2) * sin(deg2rad($lat2-$lat1)/2) + cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * sin(deg2rad($lon2-$lon1)/2) * sin(deg2rad($lon2-$lon1)/2); 
+    
+            $c = 2 * atan2(sqrt($a), sqrt(1-$a)); 
+  
+            return $R * $c; // Distance in km
        }
     
 ?>

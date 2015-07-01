@@ -58,20 +58,9 @@
             
             // --- FILTERING ---
             // --- If json data does not exist then FETCH ALL places
-            if($jsondata){                
-                
-                $json_subcategory_list = array_key_exists('subcat_list',$jsondata) ? $jsondata['subcat_list'] : null;
-                $json_keyword = array_key_exists('keyword',$jsondata) ? $jsondata['keyword'] : null;
-                
-                if($json_subcategory_list || $json_keyword){
-                    $fetchPlaces = fetchPlaces($obj, $json_keyword, $param_src_ekey, $json_subcategory_list, $param_src_fea, $param_src_pg );
-                    $result = Result::$SUCCESS->setContent($fetchPlaces);
-                    
-                }else{
-                    $resultError = "Search Operation parameter mismatch";
-                    $result = Result::$FAILURE_PARAM_MISMATCH->setContent($resultError);
-                }
-                
+            if($jsondata){
+                $fetchPlaces = fetchPlacesFromJsonData($obj, $jsondata);
+                $result = Result::$SUCCESS->setContent($fetchPlaces);
             }else{
                 $fetchPlaces = fetchPlaces($obj, $param_src_key, $param_src_ekey, $param_src_cat, $param_src_fea, $param_src_pg );
                 $result = Result::$SUCCESS->setContent($fetchPlaces); 
