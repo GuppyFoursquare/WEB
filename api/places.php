@@ -36,7 +36,7 @@
     {        
         if(strcmp(strtolower($param_op),"nearme")==0){  
             if($param_latitude && $param_longitude){                                
-                $result = Result::$SUCCESS->setContent(getPlacesFromLocation($obj, $param_latitude , $param_longitude , $param_subcategoryid));                
+                $result = Result::$SUCCESS->setContent(getPlacesFromLocation($obj, $param_latitude , $param_longitude , $param_subcategoryid));
             }else{                
                 $resultError = "Latitude OR Longitude parameter mismatch";
                 $result = Result::$FAILURE_PARAM_MISMATCH->setContent($resultError);
