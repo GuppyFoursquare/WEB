@@ -55,7 +55,7 @@
                                 "usr_token" => $_SESSION['token'],
                                 "usr_apikey" => session_id(),
                                 "usr_username" => $_SESSION['usr_username'],
-                                "usr_email" => _SESSION['usr_email']
+                                "usr_email" => $_SESSION['usr_email']
                                 );
                             
                             return Result::$SUCCESS->setContent($res); 
@@ -98,6 +98,9 @@
                         $aDetails = mysql_query($query);
                         $row=mysql_num_rows($aDetails);
 
+                        // --GUPPY COMMENT IMPORTANT--
+                        // Score check will be added
+                        
                         if($row > 0){
                             
                             return Result::$FAILURE_COMMENT_MULTIPLE->setContent("Review already added.");  
