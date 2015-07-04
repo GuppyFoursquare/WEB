@@ -19,6 +19,11 @@ class PlaceRating{
         public $places_rating_modified_date;
         public $places_rating_is_active;
         
+        public $usr_first_name;
+        public $usr_last_name;
+        public $usr_username;
+        public $usr_profile_picture;        
+        
         /*******************************************
          ************** CONSTRUCTOR ****************
          ******************************************/

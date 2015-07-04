@@ -7,7 +7,6 @@
  * @Modified    : 02/07/2015
  * @Description : This is the feature API
 ********************************************************/        
-       
     
     include("../prepend.php");        
     include("../functions/featureOperations.php"); 

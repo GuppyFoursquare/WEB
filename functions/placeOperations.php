@@ -133,6 +133,7 @@
                 
                 $strSqlSearch = "SELECT * FROM yb_places plc                                           
                     LEFT JOIN yb_places_rating r ON plc.plc_id = r.plc_id AND r.places_rating_is_active = 1
+                    LEFT JOIN yb_users u ON r.places_rating_by = u.usr_id
                     WHERE plc.plc_is_delete = 0 AND plc.plc_is_active = 1 AND plc.plc_id = " .$place_id ;                                
                 
                 $memLocation = array();
@@ -147,6 +148,11 @@
                         $placeRating->places_rating_created_date = $memResultData['places_rating_created_date'];
                         $placeRating->places_rating_modified_date = $memResultData['places_rating_modified_date'];
                         $placeRating->places_rating_is_active = $memResultData['places_rating_is_active']; 
+                        
+                        $placeRating->usr_first_name = $memResultData['usr_first_name']; 
+                        $placeRating->usr_last_name = $memResultData['usr_last_name']; 
+                        $placeRating->usr_username = $memResultData['usr_username'];
+                        $placeRating->usr_profile_picture =  $memResultData['usr_profile_picture'] ? SERVER_FRONT_PATH . PROFILE_IMAGE . $memResultData['usr_profile_picture'] : null;
                         
                         if($memResultData['plc_id']!=null)
                             array_push($memLocation,$placeRating);                                                

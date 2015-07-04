@@ -1,79 +1,45 @@
 <?php
 
-    include("prepend.php");
-    include("./api/class/PlaceClass.php");
+    include("./prepend.php");     
 
-    $latitude = "40.382877";
-    $longitude = "49.822825";
-
-    $tblName = " yb_places plc                            
-                    LEFT JOIN yb_countrymst c ON plc.plc_country_id = c.country_id 
-                    LEFT JOIN yb_statemst s ON plc.plc_state_id = s.state_id 
-                    LEFT JOIN yb_places_rating r ON plc.plc_id = r.plc_id AND r.places_rating_is_active = 1 ";
-    $disCol = " *,plc.plc_id AS plc_id,  ( 3959 * acos( cos( radians(".$latitude.") ) * cos( radians( plc_latitude ) ) * cos( radians( plc_longitude ) - radians(".$longitude.") ) + sin( radians(".$latitude.") ) * sin( radians( plc_latitude ) ) ) ) AS distance ";
-    $where = " plc.plc_is_delete = 0 AND plc.plc_is_active = 1 ";
-    $having = " distance < 50 ";
-    $order_col = " distance ";
-            
-    $qry = "SELECT " . $disCol . " FROM " . $tblName;
-
-    if ($where != '')
-        $qry .= " WHERE " . $where;
+    $param_op           = isset($_GET['op']) ? $_GET['op'] : null;     
+    $param_name         = isset($_GET['name']) ? $_GET['name'] : null;
+    $param_pass         = isset($_GET['pass']) ? $_GET['pass'] : null;
+        
     
-    if ($having != '')
-        $qry .= " HAVING " . $having;
-
-    if ($order_col != '')
-        $qry .= " ORDER BY " . $order_col;
-
-    if ($order_by != '')
-        $qry .= $order_by;
-
-    if ($group_by != '')
-        $qry .= ' GROUP BY ' . $group_by;
-
-    //for display query
-    if (!empty($disQuery)) {
-        echo $qry;
-        die;
-    }
+    $result = Result::$SUCCESS;
+    
+    if($param_op){
+        if(strcmp(strtolower($param_op),"login")==0){                        
             
-    $result = mysql_query($qry);                     
-    $resultData = array();
-    if (@mysql_errno() == '0' && mysql_num_rows($result) > '0') {
-        if($singleRow)
-        {
-            $resultData = mysql_fetch_assoc($result);
+            session_id("123");
+            @session_start();
+                  
+            $_SESSION['name'] = "kemalsamikaracax";
+            
+            $result = Result::$SUCCESS->setContent("name value :: " . $_SESSION['name'] . " " . session_id());            
+            
+            
+//            $array = array("session" => session_id());
+//            $result = Result::$SUCCESS->setContent($array);
+            
+        }else if(strcmp(strtolower($param_op),"check")==0){
+            
+            session_id("124");
+            @session_start();
+            
+            $result = Result::$SUCCESS->setContent("name value :: " . $_SESSION['name'] . " " . session_id());
+            
         }else{
-            while($row = mysql_fetch_object($result , 'Place')){
-                echo json_encode($row);                
-                array_push($resultData, utf8ize($row));
-            }
-        }      
+            session_id("123");
+            @session_start();            
+            $result = Result::$SUCCESS->setContent("name value :: " . $_SESSION['name'] . " " . session_id());
+                        
+        }
     }
+            
     
-    $result = Result::$SUCCESS->setContent($resultData);
-    echo json_encode($result);
-
+    header('Cookie: PHPSESSID='.session_id());
     
-    /**    
-        * @author GUPPY Org. <kskaraca@gmail.com>
-        * @param type $d array object
-        * @return type
-        * @version 1.0 
-        * 
-        * This function is used for encoding objects to JSON
-        * properly.
-        */
-       function utf8ize($d) {
-           if (is_array($d)) {
-               foreach ($d as $k => $v) {
-                   $d[$k] = utf8ize($v);
-               }
-           } else if (is_string ($d)) {
-               return utf8_encode($d);
-           }
-           return $d;
-       }
-    
+    echo json_encode($result, JSON_HEX_QUOT|JSON_HEX_TAG);    
 ?>

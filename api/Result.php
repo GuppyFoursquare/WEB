@@ -15,8 +15,12 @@
         public static $SUCCESS;
         public static $SUCCESS_EMPTY;
         public static $FAILURE_AUTH;
-        public static $FAILURE_PARAM_MISMATCH;        
-        
+        public static $FAILURE_PARAM_MISMATCH;
+        public static $FAILURE_EXCEPTION;
+        public static $FAILURE_PERMISSION;
+        public static $FAILURE_MYSQL_INSERT;        
+        public static $FAILURE_COMMENT_MULTIPLE;
+                
         public $status;
         public $code;
         public $content;
@@ -34,6 +38,10 @@
             Result::$SUCCESS_EMPTY              = Result::$SUCCESS_EMPTY ? Result::$SUCCESS_EMPTY->setContent(null) : new Result(ResultGuppy010Code , ResultGuppy010Status);
             Result::$FAILURE_AUTH               = Result::$FAILURE_AUTH ? Result::$FAILURE_AUTH->setContent(null) : new Result(ResultGuppy101Code , ResultGuppy101Status);
             Result::$FAILURE_PARAM_MISMATCH     = Result::$FAILURE_PARAM_MISMATCH ? Result::$FAILURE_PARAM_MISMATCH->setContent(null) : new Result(ResultGuppy511Code , ResultGuppy511Status);
+            Result::$FAILURE_EXCEPTION          = Result::$FAILURE_EXCEPTION ? Result::$FAILURE_EXCEPTION->setContent(null) : new Result(ResultGuppy521Code , ResultGuppy521Status);
+            Result::$FAILURE_PERMISSION         = Result::$FAILURE_PERMISSION ? Result::$FAILURE_PERMISSION->setContent(null) : new Result(ResultGuppy531Code , ResultGuppy531Status);
+            Result::$FAILURE_MYSQL_INSERT       = Result::$FAILURE_MYSQL_INSERT ? Result::$FAILURE_MYSQL_INSERT->setContent(null) : new Result('result.guppy.551' , 'FAILURE_MYSQL_INSERT');            
+            Result::$FAILURE_COMMENT_MULTIPLE   = Result::$FAILURE_COMMENT_MULTIPLE ? Result::$FAILURE_COMMENT_MULTIPLE->setContent(null) : new Result('result.guppy.611' , 'FAILURE_COMMENT_MULTIPLE');
         }
         
         
