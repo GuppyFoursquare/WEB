@@ -104,6 +104,7 @@ class Place{
             $this->feature_id       = $place->feature_id;
             
             $this->distance         = $place->distance;
+            $this->plc_avg_rating   = $place->plc_avg_rating;
         }
         
     }
