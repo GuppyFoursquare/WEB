@@ -10,6 +10,8 @@
  * @Description : This file use include all required files in project.
 ********************************************************/
 
+    //sleep(1);
+
     error_reporting(E_ALL);
     
     //----- SETUP TIMEZONE -----//

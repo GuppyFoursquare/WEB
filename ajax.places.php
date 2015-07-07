@@ -88,16 +88,14 @@ function getSliderDetails($obj){
 }
 
 
-function getResultHtml($obj,$searchText = '',$exactsearch = 0,$categories = '',$features = '',$page = 0){
-    
-    echo $categories;
+function getResultHtml($obj,$searchText = '',$exactsearch = 0,$categories = '',$features = '',$page = 0){        
     
     $fetchPlaces = array();
     if($page)
         $fetchPlaces = fetchPlaces($obj,$searchText,$exactsearch,$categories,$features,$page);
     else
-        $fetchPlaces = fetchPlaces($obj,$searchText,$exactsearch,$categories,$features);
-                  
+        $fetchPlaces = fetchPlaces($obj,$searchText,$exactsearch,$categories,$features);       
+    
     $row_inc = 0;    
     if($page > 0)
         $row_inc = $page * 6;

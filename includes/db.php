@@ -44,7 +44,7 @@ class db
             echo $qry;
             die;
         }
-
+        
         //execute query
         $result = mysql_query($qry);
         $resultData = array();

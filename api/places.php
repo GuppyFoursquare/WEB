@@ -24,7 +24,8 @@
     $param_src_ekey     = isset($_GET['src_ekey']) ? mysql_real_escape_string($_GET['src_ekey']) : 0;           // ekey --> exact serch 
     $param_src_cat      = isset($_GET['src_cat']) ? $_GET['src_cat'] : null;                                    // --GUPPY COMMENT IMPORTANT-- Burada "mysql_real_escape_string" kullanılacaktır
     $param_src_fea      = isset($_GET['src_fea']) ? $_GET['src_fea'] : null;
-    $param_src_pg       = isset($_GET['src_pg']) ?  $_GET['src_pg'] : 0;    
+    $param_src_pg       = isset($_GET['src_pg']) ?  $_GET['src_pg'] : 0; 
+    $param_popular      = isset($_GET['popular']) ?  $_GET['popular'] : 0; 
     $result             = Result::$SUCCESS_EMPTY;
     $resultError        = "";
       
@@ -61,6 +62,11 @@
             if($jsondata){
                 $fetchPlaces = fetchPlacesFromJsonData($obj, $jsondata);
                 $result = Result::$SUCCESS->setContent($fetchPlaces);
+            
+            }else if(strcmp(strtolower($param_popular),"1")==0){
+                $fetchPlaces = fetchPopularPlacesFromJsonData($obj);
+                $result = Result::$SUCCESS->setContent($fetchPlaces); 
+            
             }else{
                 $fetchPlaces = fetchPlaces($obj, $param_src_key, $param_src_ekey, $param_src_cat, $param_src_fea, $param_src_pg );
                 $result = Result::$SUCCESS->setContent($fetchPlaces); 
