@@ -440,7 +440,7 @@
                 LEFT JOIN yb_category subCat ON (plc_cat.plc_sub_cat_id = subCat.cat_id) 
                 LEFT JOIN yb_category pCat ON (subCat.cat_parent_id = pCat.cat_id) 
                 LEFT JOIN yb_features f ON (plc_fet.feature_id = f.feature_id) 
-                JOIN yb_places_rating plc_r ON (plc_r.plc_id = plc.plc_id) 
+                JOIN yb_places_rating plc_r ON (plc_r.plc_id = plc.plc_id AND places_rating_is_active=1) 
                     WHERE plc.plc_is_active = 1 AND plc.plc_is_delete = 0 
                     GROUP BY plc.plc_id ORDER BY plc_avg_rating DESC LIMIT 0,6";
             

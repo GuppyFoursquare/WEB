@@ -3,14 +3,14 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="2"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/Applications/XAMPP/htdocs/youbaku/includes/db.php</file>
+            <file>file:/Applications/XAMPP/htdocs/youbaku/test.php</file>
             <file>file:/Applications/XAMPP/htdocs/youbaku/api/places.php</file>
             <file>file:/Applications/XAMPP/htdocs/youbaku/functions/placeOperations.php</file>
-            <file>file:/Applications/XAMPP/htdocs/youbaku/api/Result.php</file>
-            <file>file:/Applications/XAMPP/htdocs/youbaku/api/ResourceBundle.php</file>
-            <file>file:/Applications/XAMPP/htdocs/youbaku/prepend.php</file>
-            <file>file:/Applications/XAMPP/htdocs/youbaku/functions/authOperations.php</file>
-            <file>file:/Applications/XAMPP/htdocs/youbaku/api/auth.php</file>
-            <file>file:/Applications/XAMPP/htdocs/youbaku/ajax.places.php</file>
+            <file>file:/Applications/XAMPP/htdocs/youbaku/nearme.php</file>
+            <file>file:/Applications/XAMPP/htdocs/youbaku/api/category.php</file>
+            <file>file:/Applications/XAMPP/htdocs/youbaku/most_popular.php</file>
+            <file>file:/Applications/XAMPP/htdocs/youbaku/admin/include/function.php</file>
         </group>
     </open-files>
 </project-private>
