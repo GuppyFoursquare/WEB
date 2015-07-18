@@ -14,12 +14,9 @@
     
     $latitude1 = (isset($_GET['lat']) ? $_GET['lat'] : '');
     $longitude1 = (isset($_GET['long']) ? $_GET['long'] : '');    
+    echo json_encode(getPlacesFromLocationArray($obj,$latitude1 , $longitude1));        
     
-    echo json_encode(getPlacesFromLocationArray($obj,$latitude1 , $longitude1));
-    
-    
-    
-    
+   
     /**
      * @param type $latitude
      * @param type $longitude
@@ -50,5 +47,21 @@
 
             return $memLocation;            
     }
+    
+    function getPlacesQuery($latitude , $longitude){
+            
+                                   
+                $strSqlSearch = "SELECT "
+                        . "*,"
+                        . "( 3959 * acos( cos( radians(".$latitude.") ) * cos( radians( plc_latitude ) ) * cos( radians( plc_longitude ) - radians(".$longitude.") ) + sin( radians(".$latitude.") ) * sin( radians( plc_latitude ) ) ) ) AS distance 
+                    FROM yb_places plc   
+                    LEFT JOIN yb_countrymst c ON plc.plc_country_id = c.country_id 
+                    LEFT JOIN yb_statemst s ON plc.plc_state_id = s.state_id
+                    WHERE plc.plc_is_delete = 0 AND plc.plc_is_active = 1 
+                    HAVING distance < 50
+                    ORDER BY distance ";
+                
+                return $strSqlSearch;
+        }
                         
 ?>
