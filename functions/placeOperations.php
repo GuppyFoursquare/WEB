@@ -192,7 +192,7 @@
          * This function return place with a given id
          */
         function getPlaceFromID($obj,$param_plc_id){            
-                include '../api/class/PlaceClass.php';
+                include_once '../api/class/PlaceClass.php';
                 
                 $tblName = " yb_places plc ";
                 
@@ -455,7 +455,9 @@
                         $place = new Place();
                         $place->setPlaceObjectCoreVariables($memResultData);
                                                 
-                        array_push($memLocation,$memResultData);
+                        //array_push($memLocation,$memResultData);                        
+                        $place = getPlaceFromID($obj,$place->plc_id);
+                        array_push($memLocation,$place);
                     }
                 }                
                                 
