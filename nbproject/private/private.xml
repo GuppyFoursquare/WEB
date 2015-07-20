@@ -5,7 +5,12 @@
         <group>
             <file>file:/Applications/XAMPP/htdocs/youbaku/api/class/PlaceClass.php</file>
             <file>file:/Applications/XAMPP/htdocs/youbaku/api/places.php</file>
+            <file>file:/Applications/XAMPP/htdocs/youbaku/test.php</file>
             <file>file:/Applications/XAMPP/htdocs/youbaku/functions/placeOperations.php</file>
+            <file>file:/Applications/XAMPP/htdocs/youbaku/my_comments.php</file>
+            <file>file:/Applications/XAMPP/htdocs/youbaku/nearme.php</file>
+            <file>file:/Applications/XAMPP/htdocs/youbaku/getLocations.php</file>
+            <file>file:/Applications/XAMPP/htdocs/youbaku/prepend.php</file>
         </group>
     </open-files>
 </project-private>
