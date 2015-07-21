@@ -76,7 +76,16 @@
             $result = Result::$FAILURE_PARAM_MISMATCH->setContent($resultError);
         }
         
-    }                  
+    }else if($jsondata){
+        
+        if(array_key_exists('op',$jsondata)){
+            if(strcmp(strtolower($jsondata['op']),"search")==0){
+                $fetchPlaces = fetchPlacesFromJsonData($obj, $jsondata);
+                $result = Result::$SUCCESS->setContent($fetchPlaces);
+            }            
+        }
+        
+    }                 
     
     // --- removing null values ---
     $result = Result::object_unset_nulls($result);
