@@ -450,14 +450,19 @@
                 $memResult = $obj->executeSql($qry);                
                 if($memResult){
                     while($memResultData = mysql_fetch_object($memResult, 'Place')){
+                        try {
+                            //--- Create & Fetch to Place object
+                            $place = new Place();
+                            $place->setPlaceObjectCoreVariables($memResultData);
+
+                            //array_push($memLocation,$memResultData);                          
+                            $place = getPlaceFromID($obj,$place->plc_id);
+                            array_push($memLocation,$place);
+                            
+                        }catch(Exception $e) {
+                            
+                        }                         
                         
-                        //--- Create & Fetch to Place object
-                        $place = new Place();
-                        $place->setPlaceObjectCoreVariables($memResultData);
-                                                
-                        //array_push($memLocation,$memResultData);                        
-                        $place = getPlaceFromID($obj,$place->plc_id);
-                        array_push($memLocation,$place);
                     }
                 }                
                                 
@@ -571,28 +576,33 @@
                 if($memResult){
                     while($memResultData = mysql_fetch_object($memResult, 'Place')){
                         
-                        //--- Create & Fetch to Place object
-                        $place = new Place();
-                        $place->setPlaceObjectCoreVariables($memResultData);                                                
+                        try {                        
+                            //--- Create & Fetch to Place object
+                            $place = new Place();
+                            $place->setPlaceObjectCoreVariables($memResultData);                                                
+
+    //                        //--- Comments are fetched ----
+    //                        $place->rating = getPlacesRating($obj,$place->plc_id);
+    //                        
+    //                        //--- Returns average rating of place ---
+    //                        $strSqlAverageRating = "SELECT AVG(r.place_rating_rating) AS rating_avg FROM yb_places plc                                           
+    //                            LEFT JOIN yb_places_rating r ON plc.plc_id = r.plc_id AND r.places_rating_is_active = 1                             
+    //                            WHERE plc.plc_is_delete = 0 AND plc.plc_is_active = 1 AND plc.plc_id = " .$place->plc_id 
+    //                            . " GROUP BY r.place_rating_rating" ;                                
+    //                        $memAvgResult = $obj->executeSql($strSqlAverageRating);
+    //                        if($memAvgResult){
+    //                            $place->plc_avg_rating = mysql_fetch_array($memAvgResult)['rating_avg'];
+    //                        }                                                
+    //                        
+    //                        array_push($memLocation,$place);
+
+                            //array_push($memLocation,$memResultData);                        
+                            $place = getPlaceFromID($obj,$place->plc_id);
+                            array_push($memLocation,$place);
                         
-//                        //--- Comments are fetched ----
-//                        $place->rating = getPlacesRating($obj,$place->plc_id);
-//                        
-//                        //--- Returns average rating of place ---
-//                        $strSqlAverageRating = "SELECT AVG(r.place_rating_rating) AS rating_avg FROM yb_places plc                                           
-//                            LEFT JOIN yb_places_rating r ON plc.plc_id = r.plc_id AND r.places_rating_is_active = 1                             
-//                            WHERE plc.plc_is_delete = 0 AND plc.plc_is_active = 1 AND plc.plc_id = " .$place->plc_id 
-//                            . " GROUP BY r.place_rating_rating" ;                                
-//                        $memAvgResult = $obj->executeSql($strSqlAverageRating);
-//                        if($memAvgResult){
-//                            $place->plc_avg_rating = mysql_fetch_array($memAvgResult)['rating_avg'];
-//                        }                                                
-//                        
-//                        array_push($memLocation,$place);
-                        
-                        //array_push($memLocation,$memResultData);                        
-                        $place = getPlaceFromID($obj,$place->plc_id);
-                        array_push($memLocation,$place);
+                        }catch(Exception $e) {
+                            
+                        }
                     }
                 }                
                                 
