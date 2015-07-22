@@ -36,7 +36,7 @@
     
     
     // GET CONTENT-TYPE
-    if(strcmp(strtolower($_SERVER["CONTENT_TYPE"]),"application/x-www-form-urlencoded")==0){
+    if(array_key_exists("CONTENT_TYPE",$_SERVER) && strcmp(strtolower($_SERVER["CONTENT_TYPE"]),"application/x-www-form-urlencoded")==0){
         
         try{
             $jsondata = $_POST;        
