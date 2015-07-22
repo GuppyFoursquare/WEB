@@ -8,7 +8,7 @@
  * @Description : This is the API result object
 ********************************************************/    
 
-    include './ResourceBundle.php';        
+    require_once("ResourceBundle.php");
 
     class Result
     {
