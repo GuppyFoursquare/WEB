@@ -33,8 +33,25 @@
     $jsondata           = json_decode(file_get_contents('php://input'), true);
     
     
-    if($param_op)
-    {        
+    
+    
+    // GET CONTENT-TYPE
+    if(strcmp(strtolower($_SERVER["CONTENT_TYPE"]),"application/x-www-form-urlencoded")==0){
+        
+        try{
+            $jsondata = $_POST;        
+            if(array_key_exists('op',$jsondata)){
+                if(strcmp(strtolower($jsondata['op']),"search")==0){                
+                    $fetchPlaces = fetchPlacesFromJsonData($obj, $jsondata);
+                    $result = Result::$SUCCESS->setContent($fetchPlaces);
+                }            
+            }        
+        } catch (Exception $ex) {
+            $result = Result::$FAILURE_EXCEPTION->setContent("application/x-www-form-urlencoded :: " + $ex);
+        }        
+        
+    }else if($param_op){        
+        
         if(strcmp(strtolower($param_op),"nearme")==0){  
             if($param_latitude && $param_longitude){                                
                 $result = Result::$SUCCESS->setContent(getPlacesFromLocation($obj, $param_latitude , $param_longitude , $param_subcategoryid));
