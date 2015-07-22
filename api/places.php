@@ -113,9 +113,10 @@
 
         echo json_encode(Result::$FAILURE_EXCEPTION->setContent("API->places exception"));
         
-    } finally {
+    } 
+    
         //----- CONNECTION CLOSE -----//
         mysql_close();
-    }
+    
     
 ?>

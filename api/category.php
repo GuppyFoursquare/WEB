@@ -28,9 +28,10 @@
 
         echo json_encode(Result::$FAILURE_EXCEPTION->setContent("API->category exception"));
         
-    } finally {
+    } 
+    
         //----- CONNECTION CLOSE -----//
         mysql_close();
-    }
+    
         
 ?>
