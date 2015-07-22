@@ -37,7 +37,7 @@
     $apikey = isset($_GET['apikey']) ? $_GET['apikey'] : null;
     if($apikey){
         session_id($apikey);
-    }
+    }           
         
     @session_start();
 ?>

@@ -8,19 +8,29 @@
  * @Description : This is the category API
 ********************************************************/    
    
-    include("../prepend.php");     
-    error_reporting(E_ALL);
+    require_once("../prependAPI.php"); 
+    require_once("../admin/include/function.php");
+    
+    try{
         
-    if(isset($_GET['cat_id']))
-    {                                
+        if(isset($_GET['cat_id']))
+        {                                
+            $subCatArr = fetchCategory($obj,$_GET['cat_id']);                 
+            echo json_encode(Result::$SUCCESS->setContent($subCatArr));
+
+        }else{
+
+            $catArr = fetchCategory($obj);          
+            echo json_encode(Result::$SUCCESS->setContent($catArr));
+        } 
         
-        $subCatArr = fetchCategory($obj,$_GET['cat_id']);                 
-        echo json_encode(Result::$SUCCESS->setContent($subCatArr));
+    } catch (Exception $ex) {
+
+        echo json_encode(Result::$FAILURE_EXCEPTION->setContent("API->category exception"));
         
-    }else{
-        
-        $catArr = fetchCategory($obj);          
-        echo json_encode(Result::$SUCCESS->setContent($catArr));        
-    }        
+    } finally {
+        //----- CONNECTION CLOSE -----//
+        mysql_close();
+    }
         
 ?>
