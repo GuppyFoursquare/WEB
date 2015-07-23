@@ -46,14 +46,9 @@
                             $_SESSION['usr_state'] = $rowArray['usr_state'];
                             $_SESSION['usr_country'] = $rowArray['usr_country'];
                             $_SESSION['usr_zip'] = $rowArray['usr_zip'];
-                            $_SESSION['usr_profile_picture'] = $rowArray['usr_profile_picture'];
-
-                            // --- Token created according to user's unique mail address
-                            $_SESSION['token'] = md5(uniqid($_SESSION['usr_email'] , true));
+                            $_SESSION['usr_profile_picture'] = $rowArray['usr_profile_picture'];                            
                             
-                            $res = array(
-                                "usr_token" => $_SESSION['token'],
-                                "usr_apikey" => session_id(),
+                            $res = array(                                
                                 "usr_username" => $_SESSION['usr_username'],
                                 "usr_email" => $_SESSION['usr_email']
                                 );

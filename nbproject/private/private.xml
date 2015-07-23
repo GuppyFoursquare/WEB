@@ -5,8 +5,12 @@
         <group>
             <file>file:/Applications/XAMPP/htdocs/youbaku/api/register.php</file>
             <file>file:/Applications/XAMPP/htdocs/youbaku/api/places.php</file>
+            <file>file:/Applications/XAMPP/htdocs/youbaku/api/Result.php</file>
+            <file>file:/Applications/XAMPP/htdocs/youbaku/api/feature.php</file>
             <file>file:/Applications/XAMPP/htdocs/youbaku/api/category.php</file>
+            <file>file:/Applications/XAMPP/htdocs/youbaku/prepend.php</file>
             <file>file:/Applications/XAMPP/htdocs/youbaku/prependAPI.php</file>
+            <file>file:/Applications/XAMPP/htdocs/youbaku/api/auth.php</file>
         </group>
     </open-files>
 </project-private>
