@@ -10,7 +10,9 @@
     
     include("../prependAPI.php");        
     include("../functions/featureOperations.php"); 
-    include("./class/Feature.php");
+    include("./class/Feature.php");        
+    
+    
     
     try{
     

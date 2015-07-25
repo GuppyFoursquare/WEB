@@ -76,8 +76,8 @@
                 // --- FILTERING ---
                 // --- If json data does not exist then FETCH ALL places
                 if($jsondata){
-                    $fetchPlaces = fetchPlacesFromJsonData($obj, $jsondata);
-                    $result = Result::$SUCCESS->setContent($fetchPlaces);
+                    
+                    $result = fetchPlacesFromJsonData($obj, $jsondata);
 
                 }else if(strcmp(strtolower($param_popular),"1")==0){
                     $fetchPlaces = fetchPopularPlacesFromJsonData($obj);

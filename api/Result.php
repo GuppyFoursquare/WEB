@@ -90,7 +90,22 @@
                     unset($obj->$key);
             }
             return $obj;
-        }                
+        }
+        
+        
+        static function sendReport($logtype , $logFile , $logMethod , $logDesc){
+                
+            $filename = dirname( __FILE__ ) . "../../server.log";
+            $logcontent = file_get_contents($filename);
+
+            $date = getdate()['year']."/".getdate()['mon']."/".getdate()['mday']."-".getdate()['hours'].":".getdate()['minutes'];
+            $session = isset($_SESSION)?session_id() : "SESSION_NULL";
+            $txt = $date . " --> " . $session . " :: " . $logtype . "  " . $logFile . "  " . $logMethod . "  " . $logDesc . "\n";
+            $logcontent .= $txt;
+
+            file_put_contents($filename, $logcontent);        
+
+        }
         
     }
 

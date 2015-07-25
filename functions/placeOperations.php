@@ -473,7 +473,7 @@
          *
          */
         function fetchPlacesFromJsonData($obj,$jsonData){               
-            
+
                 include '../api/class/PlaceClass.php';                                
             
                 // --- QUERY PART ---
@@ -578,8 +578,8 @@
                         
                         try {                        
                             //--- Create & Fetch to Place object
-                            $place = new Place();
-                            $place->setPlaceObjectCoreVariables($memResultData);                                                
+//                            $place = new Place();
+//                            $place->setPlaceObjectCoreVariables($memResultData);                                                
 
     //                        //--- Comments are fetched ----
     //                        $place->rating = getPlacesRating($obj,$place->plc_id);
@@ -596,17 +596,29 @@
     //                        
     //                        array_push($memLocation,$place);
 
-                            //array_push($memLocation,$memResultData);                        
-                            $place = getPlaceFromID($obj,$place->plc_id);
-                            array_push($memLocation,$place);
-                        
-                        }catch(Exception $e) {
+                            //array_push($memLocation,$memResultData);  
                             
+                            if($memResultData && $memResultData->plc_id){
+                                $place = getPlaceFromID($obj,$memResultData->plc_id);
+                                array_push($memLocation,$place);
+                            }else{
+                                Result::sendReport("EMPTY_RESULT", "placeOperations.php", "fetchPlacesFromJsonData", "result return empty");
+                                return Result::$SUCCESS_EMPTY->setContent("fetching query result error"); 
+                            }
+                                                    
+                        }catch(Exception $e) {
+                            Result::sendReport("ERROR_EXCEPTION", "placeOperations.php", "fetchPlacesFromJsonData", "fetching query result error");
+                            return Result::$FAILURE_EXCEPTION->setContent("fetching query result error");
                         }
                     }
+                    
+                }else{
+                    Result::sendReport("ERROR_EXCEPTION", "placeOperations.php", "fetchPlacesFromJsonData", "query result NULL");
+                    return Result::$FAILURE_EXCEPTION->setContent("query result NULL"); 
                 }                
-                                
-                return $memLocation;                                
+                        
+                Result::sendReport("SUCCESS", "placeOperations.php", "fetchPlacesFromJsonData", "OK -- result count::" . count($memLocation));
+                return Result::$SUCCESS->setContent($memLocation);
         }
         
         
