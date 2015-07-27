@@ -32,8 +32,6 @@
         $jsondata           = json_decode(file_get_contents('php://input'), true);
 
 
-
-
         // GET CONTENT-TYPE
         if(array_key_exists("CONTENT_TYPE",$_SERVER) && strcmp(strtolower($_SERVER["CONTENT_TYPE"]),"application/x-www-form-urlencoded")==0){
 
@@ -95,10 +93,12 @@
         }else if($jsondata){
 
             if(array_key_exists('op',$jsondata)){
-                if(strcmp(strtolower($jsondata['op']),"search")==0){
-                    $fetchPlaces = fetchPlacesFromJsonData($obj, $jsondata);
-                    $result = Result::$SUCCESS->setContent($fetchPlaces);
+                if(strcmp(strtolower($jsondata['op']),"search")==0){                    
+                    $result = fetchPlacesFromJsonData($obj, $jsondata);
                 }            
+            }else{
+                $resultError = "Operation parameter mismatch";
+                $result = Result::$FAILURE_PARAM_MISMATCH->setContent($resultError);
             }
 
         }                 

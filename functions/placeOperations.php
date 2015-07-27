@@ -417,8 +417,10 @@
                     return $final_array;
                 }
 
-                $plcArr = utf8ize($plcArr);                
+                
+                $plcArr = utf8ize($plcArr);
                 return $plcArr;
+                
         }
         
         
@@ -473,7 +475,7 @@
          *
          */
         function fetchPlacesFromJsonData($obj,$jsonData){               
-
+            
                 include '../api/class/PlaceClass.php';                                
             
                 // --- QUERY PART ---
@@ -503,35 +505,35 @@
                     }                    
                 }                
                 
-                // --- JSON PART ---               
-                if(array_key_exists('subcat_list',$jsonData)){
-                    $where      .= " AND plc_cat.plc_sub_cat_id IN (". implode(',',$jsonData['subcat_list']).") ";
+                // --- JSON PART ---                               
+                if(json_decode($jsonData['subcat_list'])){
+                    $where      .= " AND plc_cat.plc_sub_cat_id IN (". implode(",", json_decode($jsonData['subcat_list'])) .") ";
                 }
                 
-                if(array_key_exists('feature_list',$jsonData)){
-                    $where      .= " AND plc_fea.feature_id IN (". implode(',',$jsonData['feature_list']).") ";
+                if(json_decode($jsonData['feature_list'])){
+                    $where      .= " AND plc_fea.feature_id IN (". json_decode($jsonData['feature_list']) .") ";
                 }
                 
-                if(array_key_exists('location',$jsonData)){
-                    $location_obj = $jsonData['location'];                    
-                    if(array_key_exists('latitude',$location_obj) && array_key_exists('longitude',$location_obj)){                        
-                        $tblName    = "(SELECT plc_id,sin(radians(plc_latitude - ". $location_obj['latitude'] .")/2) * sin(radians(plc_latitude - ".$location_obj['latitude'].")/2) + cos(radians(".$location_obj['latitude'].")) * cos(radians(plc_latitude)) * sin(radians(plc_longitude - ".$location_obj['longitude'].")/2) * sin(radians(plc_longitude - ".$location_obj['longitude'].")/2) AS haversine  FROM yb_places WHERE plc_is_delete = 0 AND plc_is_active = 1) hav, " . $tblName ;
+                if(json_decode($jsonData['location'])){
+                    $location_obj = json_decode($jsonData['location']);                    
+                    if( json_decode($location_obj['latitude']) && json_decode($location_obj['longitude']) ){
+                        $tblName    = "(SELECT plc_id,sin(radians(plc_latitude - ". json_decode($location_obj['latitude']) .")/2) * sin(radians(plc_latitude - ".json_decode($location_obj['latitude']).")/2) + cos(radians(".json_decode($location_obj['latitude']).")) * cos(radians(plc_latitude)) * sin(radians(plc_longitude - ".json_decode($location_obj['longitude']).")/2) * sin(radians(plc_longitude - ".json_decode($location_obj['longitude']).")/2) AS haversine  FROM yb_places WHERE plc_is_delete = 0 AND plc_is_active = 1) hav, " . $tblName ;
                         $disCol     .= ",6371 * 2 * atan2(sqrt(haversine), sqrt(1-haversine)) AS distance";
                         $where      .= " AND hav.plc_id=plc.plc_id "; 
                         
-                        $distance = array_key_exists('distance',$location_obj) ? $location_obj['distance'] : 50;                                                
+                        $distance = json_decode($location_obj['distance']) ? json_decode($location_obj['distance']) : 50;                                                
 
                         $having = strlen($having)>0 ? ($having . " AND distance < ".$distance) : (" distance < ".$distance);                       
                         $order_col = " distance ";                        
                     }
                 }
                 
-                if(array_key_exists('keyword',$jsonData)){  
+                if(json_decode($jsonData['keyword'])){
                     
                     $tblName    .= " LEFT JOIN yb_category cat ON (plc_cat.plc_sub_cat_id=cat.cat_id) "
                                     . "LEFT JOIN yb_category scat ON (plc_cat.plc_sub_cat_id = scat.cat_id)" ;
                     
-                    $searchText = trim($jsonData['keyword']);
+                    $searchText = trim(json_decode($jsonData['keyword']));
                     if(!empty($searchText)){
                         if($exactSearch)
                         {
@@ -543,8 +545,8 @@
                         }
                     }
                 }                                   
-                                
-                if(array_key_exists('allRec',$jsonData)){
+                   
+                if(json_decode($jsonData['allRec'])){ 
                     $where .= " GROUP BY plc.plc_id ";
                 }else{                    
                     $where .= " GROUP BY plc.plc_id";
@@ -578,8 +580,8 @@
                         
                         try {                        
                             //--- Create & Fetch to Place object
-//                            $place = new Place();
-//                            $place->setPlaceObjectCoreVariables($memResultData);                                                
+                            $place = new Place();
+                            $place->setPlaceObjectCoreVariables($memResultData);                                                
 
     //                        //--- Comments are fetched ----
     //                        $place->rating = getPlacesRating($obj,$place->plc_id);
@@ -596,28 +598,51 @@
     //                        
     //                        array_push($memLocation,$place);
 
-                            //array_push($memLocation,$memResultData);  
+                            //array_push($memLocation,$memResultData);                              
+//                            $place = getPlaceFromID($obj,$memResultData->plc_id);
+//                            array_push($memLocation,$place);
                             
                             if($memResultData && $memResultData->plc_id){
                                 $place = getPlaceFromID($obj,$memResultData->plc_id);
                                 array_push($memLocation,$place);
-                            }else{
-                                Result::sendReport("EMPTY_RESULT", "placeOperations.php", "fetchPlacesFromJsonData", "result return empty");
+                            }else{ 
+//                                Result::sendReport("EMPTY_RESULT", "placeOperations.php", "fetchPlacesFromJsonData", "result return empty");
                                 return Result::$SUCCESS_EMPTY->setContent("fetching query result error"); 
                             }
                                                     
-                        }catch(Exception $e) {
-                            Result::sendReport("ERROR_EXCEPTION", "placeOperations.php", "fetchPlacesFromJsonData", "fetching query result error");
+                        }catch(Exception $e) {                            
+//                            Result::sendReport("ERROR_EXCEPTION", "placeOperations.php", "fetchPlacesFromJsonData", "fetching query result error");
                             return Result::$FAILURE_EXCEPTION->setContent("fetching query result error");
                         }
                     }
                     
                 }else{
-                    Result::sendReport("ERROR_EXCEPTION", "placeOperations.php", "fetchPlacesFromJsonData", "query result NULL");
+                    
+                    $filename = dirname( __FILE__ ) . "/../server.log";                        
+                    $logcontent = file_get_contents($filename,FILE_USE_INCLUDE_PATH);
+
+                    $date = getdate()['year']."/".getdate()['mon']."/".getdate()['mday']."-".getdate()['hours'].":".getdate()['minutes'];
+                    $session = isset($_SESSION)?session_id() : "SESSION_NULL";
+                    $txt = $date . " --> " . $session . " :: " . "333" . "  " . "222" . "  " . "333" . "  " . $qry . "\n";
+                    $logcontent .= $txt;
+                    file_put_contents($filename, $logcontent); 
+                    
+//                    Result::sendReport("ERROR_NULL", "placeOperations.php", "fetchPlacesFromJsonData", "query result NULL");
                     return Result::$FAILURE_EXCEPTION->setContent("query result NULL"); 
                 }                
-                        
-                Result::sendReport("SUCCESS", "placeOperations.php", "fetchPlacesFromJsonData", "OK -- result count::" . count($memLocation));
+                                
+                
+                    $filename = dirname( __FILE__ ) . "/../server.log";                        
+                    $logcontent = file_get_contents($filename,FILE_USE_INCLUDE_PATH);
+
+                    $date = getdate()['year']."/".getdate()['mon']."/".getdate()['mday']."-".getdate()['hours'].":".getdate()['minutes'];
+                    $session = isset($_SESSION)?session_id() : "SESSION_NULL";
+                    $txt = $date . " --> " . $session . " :: " . "444" . "  " . "222" . "  " . "333" . "  " . $qry . "\n";                
+    //                $txt .=json_encode(Result::$SUCCESS->setContent($memLocation) , JSON_HEX_QUOT|JSON_HEX_TAG); 
+                    $logcontent .= $txt;
+                    file_put_contents($filename, $logcontent);  
+            
+//                Result::sendReport("SUCCESS", "placeOperations.php", "fetchPlacesFromJsonData", "OK -- result count::" . count($memLocation));
                 return Result::$SUCCESS->setContent($memLocation);
         }
         

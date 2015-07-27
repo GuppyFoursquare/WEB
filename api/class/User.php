@@ -53,6 +53,19 @@ class User{
         function setFeatureObjectCoreVariables($user){
             $this->usr_id               = $user->usr_id;            
         }
+        
+        
+        function getUserInfoFromSession(){
+            $this->usr_username         = isset($_SESSION['usr_username']) ? $_SESSION['usr_username'] : '';
+            $this->usr_first_name       = isset($_SESSION['usr_first_name']) ? $_SESSION['usr_first_name'] : '';
+            $this->usr_last_name        = isset($_SESSION['usr_last_name']) ? $_SESSION['usr_last_name'] : '';
+            $this->usr_email            = isset($_SESSION['usr_email']) ? $_SESSION['usr_email'] : '';
+            $this->usr_profile_picture  = isset($_SESSION['usr_profile_picture']) ? $_SESSION['usr_profile_picture'] : '';
+            $this->usr_country          = isset($_SESSION['usr_country']) ? $_SESSION['usr_country'] : '';
+            $this->usr_address          = isset($_SESSION['usr_address']) ? $_SESSION['usr_address'] : '';
+            $this->usr_country          = isset($_SESSION['usr_country']) ? $_SESSION['usr_country'] : '';
+            
+        }
     
 }
 

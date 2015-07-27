@@ -77,7 +77,48 @@
         
         
         
-        // -------------- -------------- EDIT PART -------------- --------------
+        
+        
+        
+        
+        
+        
+        // -------------- -------------- REGISTER PART -------------- --------------
+        function authRegister($jsonData){
+            
+            
+            $sFirstName = array_key_exists('mem_first_name',$jsonData) ? $jsonData['mem_first_name'] : '';
+            $sLastName = array_key_exists('mem_last_name',$jsonData) ? $jsonData['mem_last_name'] : '';
+            $sdob = array_key_exists('mem_dob',$jsonData) ? $jsonData['mem_dob'] : '';
+            $semail = array_key_exists('mem_email',$jsonData) ? $jsonData['mem_email'] : '';
+            $sUserName = array_key_exists('mem_user_name',$jsonData) ? $jsonData['mem_user_name'] : '';
+            $sPassword = array_key_exists('mem_password',$jsonData) ? $jsonData['mem_password'] : '';
+            $sRePassword = array_key_exists('cmem_password',$jsonData) ? $jsonData['cmem_password'] : '';
+            $sContact = array_key_exists('mem_mob',$jsonData) ? $jsonData['mem_mob'] : '';
+            $sCountry = array_key_exists('ddlCountrySelect',$jsonData) ? $jsonData['ddlCountrySelect'] : '';
+            $sState = array_key_exists('ddlStateSelect',$jsonData) ? $jsonData['ddlStateSelect'] : '';
+            $sCity = array_key_exists('txtCity',$jsonData) ? $jsonData['txtCity'] : '';
+            $sAddress = array_key_exists('txtAddress',$jsonData) ? $jsonData['txtAddress'] : '';            
+                                    
+            
+            $sImage_name = isset($_FILES['image1']['name']) ? $_FILES['image1']['name'] : '';
+            
+            
+                    
+            return Result::$SUCCESS_EMPTY;
+        }
+        // -------------- -------------- REGISTER PART -------------- --------------
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        // -------------- -------------- COMMENT PART -------------- --------------
         function commentAdd($jsonData){                                                                   
                    
                 if($jsonData)
@@ -131,7 +172,7 @@
                 }
                             
         }
-        // -------------- -------------- EDIT PART -------------- --------------
+        // -------------- -------------- COMMENT PART -------------- --------------
         
         
         
