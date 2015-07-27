@@ -64,7 +64,7 @@ class User{
             $this->usr_country          = isset($_SESSION['usr_country']) ? $_SESSION['usr_country'] : '';
             $this->usr_address          = isset($_SESSION['usr_address']) ? $_SESSION['usr_address'] : '';
             $this->usr_country          = isset($_SESSION['usr_country']) ? $_SESSION['usr_country'] : '';
-            
+            $this->usr_profile_picture  = isset($_SESSION['usr_profile_picture']) ? $_SESSION['usr_profile_picture'] : '';
         }
     
 }
