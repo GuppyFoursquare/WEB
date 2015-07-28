@@ -160,8 +160,8 @@
                                 $user->getUserInfoFromSession();
                                 $result = Result::$SUCCESS->setContent($user);                            
 
-                            }else if($row == 1){
-                                $result = Result::$SUCCESS_EMPTY->setContent("case-2.1.2-");
+                            }else if($row == 1){                                
+                                $result = Result::$FAILURE_ALREADY_EXIST->setContent("User already exist...");
                             }else if($row > 1){
                                 $result = Result::$SUCCESS_EMPTY->setContent("case-2.1.3-");
                             }else{
@@ -176,14 +176,38 @@
                     }
                         
 
-                }else if(strcmp(strtolower($jsondata['op']),"info")==0){                
-
+                }else if(strcmp(strtolower($jsondata['op']),"info")==0){
+                    
                     $user = new User();
                     $user->getUserInfoFromSession();
                     $result = Result::$SUCCESS->setContent($user);
                     
+                }else if(strcmp(strtolower($jsondata['op']),"logout")==0){  
+                    
+                    
+//                    $result = Result::$SUCCESS->setContent("Success logout");
+                    
+                    $registerToken = session_id();
+                    $registerAPI = $_SESSION['apikey'];
+                    
+                    // delete apikey and token info from database                                        
+                    $sQuery="DELETE FROM yb_api_keys WHERE api_token = '".  session_id()."' AND api_key = '".$_SESSION['apikey']."'";
+                    $aDetails = mysql_query($sQuery);                    
+                    if($aDetails)
+                    {
+                        $result = Result::$SUCCESS->setContent("Success logout");
+                        session_destroy();
+                        
+                        session_id($registerToken);
+                        @session_start();
+                        $_SESSION['apikey'] = $registerAPI;
+                        
+                    }else{
+                        $result = Result::$FAILURE_AUTH->setContent("auth.php > Token and apikey not found");
+                    }
+                                               
                 }else{
-                    $result = Result::$FAILURE_PARAM_MISMATCH->setContent("op parameter mismatch");                    
+                    $result = Result::$FAILURE_PARAM_MISMATCH->setContent("op parameter mismatch");
                 }                    
                 
                 

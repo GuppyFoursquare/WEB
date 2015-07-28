@@ -25,14 +25,14 @@
               
                 try{                                    
                     
-                    if($username && $userpass){
+                    if($username && $userpass){                        
                         
                         $sQuery="SELECT usr_id,usr_first_name,usr_last_name,usr_dob,usr_username,usr_email,usr_contact,usr_address,usr_city,usr_state,usr_country,usr_zip,usr_profile_picture FROM yb_users WHERE usr_username='".$username."' AND usr_password = '".md5($userpass)."' AND usr_user_type='U'";
                         $aDetails = mysql_query($sQuery);
                         $row=mysql_num_rows($aDetails);
 
                         if($row==1)
-                        {
+                        {                                                                                    
                             $rowArray=mysql_fetch_assoc($aDetails);
                             $_SESSION['user_id'] = $rowArray['usr_id'];
                             $_SESSION['usr_username'] = $rowArray['usr_username'];
@@ -52,6 +52,13 @@
                                 "usr_username" => $_SESSION['usr_username'],
                                 "usr_email" => $_SESSION['usr_email']
                                 );
+                            
+                            //INSERT TOKEN AND APIKEY TO TABLE
+                            $apiKeyInsertQuery="INSERT INTO yb_api_keys (api_token, api_key, api_client_agent,api_user_id) VALUES ('". session_id() ."', '". $_SESSION['apikey'] ."', 'mobile' , '" . $_SESSION['user_id'] . "')";
+                            $aResult = mysql_query($apiKeyInsertQuery);
+                            if (!$aResult) {
+                                return Result::$FAILURE_MYSQL_INSERT->setContent("Login apikey&token insert error");
+                            }                            
                             
                             return Result::$SUCCESS->setContent($res); 
 

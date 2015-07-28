@@ -20,6 +20,7 @@
         public static $FAILURE_PERMISSION;
         public static $FAILURE_MYSQL_INSERT;        
         public static $FAILURE_COMMENT_MULTIPLE;
+        public static $FAILURE_ALREADY_EXIST;
                 
         public $status;
         public $code;
@@ -42,6 +43,7 @@
             Result::$FAILURE_PERMISSION         = Result::$FAILURE_PERMISSION ? Result::$FAILURE_PERMISSION->setContent(null) : new Result(ResultGuppy531Code , ResultGuppy531Status);
             Result::$FAILURE_MYSQL_INSERT       = Result::$FAILURE_MYSQL_INSERT ? Result::$FAILURE_MYSQL_INSERT->setContent(null) : new Result('result.guppy.551' , 'FAILURE_MYSQL_INSERT');            
             Result::$FAILURE_COMMENT_MULTIPLE   = Result::$FAILURE_COMMENT_MULTIPLE ? Result::$FAILURE_COMMENT_MULTIPLE->setContent(null) : new Result('result.guppy.611' , 'FAILURE_COMMENT_MULTIPLE');
+            Result::$FAILURE_ALREADY_EXIST      = Result::$FAILURE_ALREADY_EXIST ? Result::$FAILURE_ALREADY_EXIST->setContent(null) : new Result('result.guppy.621' , 'FAILURE_ALREADY_EXIST');
         }
         
         

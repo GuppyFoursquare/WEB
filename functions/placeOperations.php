@@ -152,7 +152,7 @@
                         $placeRating->usr_first_name = $memResultData['usr_first_name']; 
                         $placeRating->usr_last_name = $memResultData['usr_last_name']; 
                         $placeRating->usr_username = $memResultData['usr_username'];
-                        $placeRating->usr_profile_picture =  $memResultData['usr_profile_picture'] ? SERVER_FRONT_PATH . PROFILE_IMAGE . $memResultData['usr_profile_picture'] : null;
+                        $placeRating->usr_profile_picture =  $memResultData['usr_profile_picture'] ? SERVER_FRONT_PATH . PROFILE_IMAGE . $memResultData['usr_profile_picture'] : "-1";
                         
                         if($memResultData['plc_id']!=null)
                             array_push($memLocation,$placeRating);                                                
