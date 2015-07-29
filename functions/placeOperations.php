@@ -444,7 +444,7 @@
                 LEFT JOIN yb_features f ON (plc_fet.feature_id = f.feature_id) 
                 JOIN yb_places_rating plc_r ON (plc_r.plc_id = plc.plc_id AND places_rating_is_active=1) 
                     WHERE plc.plc_is_active = 1 AND plc.plc_is_delete = 0 
-                    GROUP BY plc.plc_id ORDER BY plc_avg_rating DESC LIMIT 0,6";
+                    GROUP BY plc.plc_id ORDER BY plc_avg_rating DESC LIMIT 0,100";
             
                     
                 // --- EXECUTE PART ---
@@ -495,6 +495,7 @@
                 $page=0;
                 $limit = 6;                
                 
+                
                 if(isset($_SESSION['is_most_popular']))
                 {
                     if($_SESSION['is_most_popular'] == 1){                                            
@@ -528,12 +529,18 @@
                     }
                 }
                 
-                if(json_decode($jsonData['keyword'])){
+                if(array_key_exists('limit',$jsonData)){
+                    $limit = $jsonData['limit'];
+                }else{
+                    $limit = 100;
+                }
+                
+                if(array_key_exists('keyword',$jsonData)){
                     
                     $tblName    .= " LEFT JOIN yb_category cat ON (plc_cat.plc_sub_cat_id=cat.cat_id) "
                                     . "LEFT JOIN yb_category scat ON (plc_cat.plc_sub_cat_id = scat.cat_id)" ;
                     
-                    $searchText = trim(json_decode($jsonData['keyword']));
+                    $searchText = trim($jsonData['keyword']);
                     if(!empty($searchText)){
                         if($exactSearch)
                         {
