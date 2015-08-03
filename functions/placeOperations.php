@@ -229,6 +229,20 @@
                         
                         //--- Comments are fetched ----
                         $place->rating = getPlacesRating($obj,$place->plc_id);
+                        $place->rating_avg  = 0;
+                        $place->rating_count= 0;
+                        
+                        if($place->rating && count($place->rating)>0){
+                            $total=0;
+                            for ($x = 0; $x <= count($place->rating); $x++) {
+                                $total += $place->rating[$x]->place_rating_rating;
+                            }
+                            $place->rating_avg = $total/count($place->rating);
+                            $place->rating_count = count($place->rating);
+                        }else{
+                            $place->rating_avg  = -1;
+                            $place->rating_count= -1;
+                        }
                         
                         array_push($memLocation,$place);                       
                     }
@@ -615,7 +629,7 @@
                                 array_push($memLocation,$place);
                             }else{ 
 //                                Result::sendReport("EMPTY_RESULT", "placeOperations.php", "fetchPlacesFromJsonData", "result return empty");
-                                return Result::$SUCCESS_EMPTY->setContent("fetching query result error"); 
+                                return Result::$SUCCESS_EMPTY->setContent("fetching query result empty"); 
                             }
                                                     
                         }catch(Exception $e) {                            
