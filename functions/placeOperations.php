@@ -6,7 +6,61 @@
  * @Modified    : 
  * @Description : This is the general functions for PLACEs
 ********************************************************/
-                
+
+
+
+        /**
+         * 
+         * @param type $intime
+         * @param type $outtime
+         * @return string
+         */
+        function isOpen($intime , $outtime){
+                $intime = explode(":", $intime);
+                $intimehour = intval($intime[0]);
+                $intimemin = intval($intime[1]);
+                $intimesec = intval($intime[2]);
+
+                $outtime = explode(":", $outtime);
+                $outtimehour = intval($outtime[0]);
+                $outtimemin = intval($outtime[1]);
+                $outtimesec = intval($outtime[2]);
+
+                $bakuTime = getdate(); 
+                $bakuhour = intval($bakuTime['hours']);
+
+                if($intimehour < $outtimehour){
+                    if(intval($bakuTime['hours'])>$intimehour && intval($bakuTime['hours'])<$outtimehour){
+                        return "1";
+                    }
+
+                }else if($intimehour > $outtimehour){
+                    
+                    //mytime::01, intime::08, outtime::02
+                    if($bakuhour<$intimehour && $bakuhour<$outtimehour){
+                        return "1";
+                    }
+                    
+                    //mytime::23, intime::08, outtime::02 
+                    if(intval($bakuTime['hours'])>$intimehour && intval($bakuTime['hours'])<($outtimehour + 24)){
+                        return "1";
+                    }
+                    
+                    //mytime::06, intime::08, outtime::02 
+                    if($bakuhour<$intimehour && $bakuhour>$outtimehour){
+                        return "0";
+                    }
+                    
+                }else{
+                    // $intimehour == $outtimehour
+                    // which mean that place open 7x24
+                    return "1";
+                }
+
+                return "0"; 
+        }
+
+
 
         /**
          * 
@@ -226,6 +280,9 @@
                         
                         //--- Comments are fetched ----
                         $place->gallery = getPlaceGallery($obj,$place->plc_id);
+                        
+                        //--- Check place isOpen ----
+                        $place->plc_is_open = isOpen($place->plc_intime, $place->plc_outtime);
                         
                         //--- Comments are fetched ----
                         $place->rating = getPlacesRating($obj,$place->plc_id);

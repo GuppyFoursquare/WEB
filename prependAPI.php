@@ -13,7 +13,7 @@
     error_reporting(E_ALL);
     
     //----- SETUP TIMEZONE -----//
-    date_default_timezone_set("Europe/Berlin");
+    date_default_timezone_set("Asia/Baku");
 
 
     //----- INCLUDE RESULT OBJECT -----//
