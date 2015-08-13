@@ -62,6 +62,10 @@
                 // session will be created here                       
                 $result = commentAdd($jsondata);                        
 
+            }else if(strcmp(strtolower($param_op),"book")==0){
+
+                $result = sendBookingRequest($jsondata);
+                
             }else{
                 $resultError = "Login API - Operation parameter mismatch";
                 $result = Result::$FAILURE_PARAM_MISMATCH->setContent($resultError);
@@ -69,7 +73,6 @@
 
         
         }else if($jsondata){
-            
             if(array_key_exists('op',$jsondata)){
                 
                 if(strcmp(strtolower($jsondata['op']),"login")==0){  
@@ -205,13 +208,17 @@
                     }else{
                         $result = Result::$FAILURE_AUTH->setContent("auth.php > Token and apikey not found");
                     }
-                                               
+                 
+                }else if(strcmp(strtolower($jsondata['op']),"book")==0){
+
+                    $result = sendBookingRequest($jsondata);
+                
                 }else{
                     $result = Result::$FAILURE_PARAM_MISMATCH->setContent("op parameter mismatch");
                 }                    
                 
-                
             }
+            
             
         }               
         

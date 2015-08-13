@@ -183,6 +183,98 @@
         
         
         
+        
+        
+        
+        
+        
+        
+        // -------------- -------------- COMMENT PART -------------- --------------
+        function sendBookingRequest($jsonData){                                                                   
+                   
+                if($jsonData)
+                {                                           
+                    if(isset($_SESSION['user_id']) && $_SESSION['usr_email']){
+                                   
+                        $plc_id             = array_key_exists('plc_id',$jsonData) ? $jsonData['plc_id'] : null;
+                        $book_comer_count   = array_key_exists('book_comer_number',$jsonData) ? $jsonData['book_comer_number'] : null;
+                        $book_date          = array_key_exists('book_date',$jsonData) ? $jsonData['book_date'] : null; 
+                        $book_time          = array_key_exists('book_time',$jsonData) ? $jsonData['book_time'] : null; 
+                        $book_contact       = array_key_exists('book_contact',$jsonData) ? $jsonData['book_contact'] : null; 
+                        $book_detail        = array_key_exists('book_detail',$jsonData) ? $jsonData['book_detail'] : null; 
+                        
+                        if(!$plc_id){
+                            return Result::$FAILURE_PARAM_MISMATCH->setContent("Place id have to be given");  
+                        }else if(!$book_comer_count){
+                            return Result::$FAILURE_PARAM_MISMATCH->setContent("Comer count have to be given");  
+                        }else if(!$book_date){
+                            return Result::$FAILURE_PARAM_MISMATCH->setContent("Reservation date have to be given");  
+                        }else if(!$book_time){
+                            return Result::$FAILURE_PARAM_MISMATCH->setContent("Reservation time have to be given");  
+                        }else if(!$book_contact){
+                            return Result::$FAILURE_PARAM_MISMATCH->setContent("Contact number have to be given");  
+                        }else if(!$book_detail){
+                            return Result::$FAILURE_PARAM_MISMATCH->setContent("Detail have to be given");  
+                        }
+                        
+                        
+                        
+                        // GET place mail address
+                        
+                        
+                        // Send mail to Youbaku admin regarding new user registration            
+                        $to = "Youbaku admin <info@youbaku.com>";
+                        $to = "Youbaku admin <kskaraca@gmail.com>";
+                        $subject = "User booking request ";
+                        $msg = "Hello admin,  <br/><br/> ".
+                                "The following user has registered on the website. <br/>The details are as follows.<br/><br/>".
+                                "Name: ". "mysql_real_escape_string(sFirstName)".' '."mysql_real_escape_string(sLastName)"."<br/>
+                                 Email: ". "mysql_real_escape_string(semail)" ."<br/>
+                                 Contact: ". "contact" ."<br/>
+                                 <br/><br/>Thank you.<br/>Youbaku Support Team.<br/>".
+                                "<a href=\"http://www.youbaku.com/index.php\"> www.youbaku.com</a>";
+                        $headers = "MIME-Version: 1.0" . "\r\n".
+                                   "Content-type: text/html; charset=iso-8859-1" . "\r\n".
+                                   "From: Youbaku".'<'. "mysql_real_escape_string(semail)".'>'."\r\n" .
+                                   "Reply-To:". "mysql_real_escape_string(sFirstName)".' '."mysql_real_escape_string(sLastName)".'<'. "mysql_real_escape_string(semail)".'>'.' \r\n'. 
+                                   "X-Mailer: PHP/" . phpversion();
+
+                        $mail_sent = mail($to,$subject,$msg,$headers);
+
+
+                        //Mail to the sender acknowledging confirmation of account creation.
+/*
+                        $to = mysql_real_escape_string($semail);
+                        $subject = "Youbaku - Registration successful.";
+                        $msg = "Hello ".mysql_real_escape_string($sFirstName).' '.mysql_real_escape_string($sLastName).",  <br/><br/> Thank you for your interest in registering with us. We will get back to you soon.<br/><br/>Thank you.<br/>Youbaku Support Team.<br/>".
+                                "<a href=\"http://www.youbaku.az/index.php\"> www.youbaku.az</a>";
+                        $headers = "MIME-Version: 1.0" . "\r\n".
+                                   "Content-type: text/html; charset=iso-8859-1" . "\r\n".
+                                   "From: Youbaku <info@youbaku.com>" . "\r\n" .
+                                   "Reply-To: Youbaku admin <info@youbaku.com>" . "\r\n" .
+                                   "X-Mailer: PHP/" . phpversion();
+
+                        $mail_sent = mail($to,$subject,$msg,$headers);
+                        
+      */                
+                        
+                        return Result::$SUCCESS->setContent(json_encode($mail_sent));  
+
+                    }else
+                    {                        
+                        return Result::$FAILURE_AUTH->setContent("Please login to add rating.");  
+                    }
+                    
+                }else
+                {
+                    return Result::$FAILURE_PARAM_MISMATCH->setContent("Parameter mismatch");  
+                }
+                            
+        }
+        // -------------- -------------- COMMENT PART -------------- --------------
+        
+        
+        
         /**    
         * @author GUPPY Org. <kskaraca@gmail.com>
         * @param type $d array object
