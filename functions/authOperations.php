@@ -193,8 +193,15 @@
         function sendBookingRequest($jsonData){                                                                   
                    
                 if($jsonData)
-                {                                           
-                    if(isset($_SESSION['user_id']) && $_SESSION['usr_email']){
+                {                                      
+                    
+                    
+                    if(!$_SESSION['usr_email'] || !$_SESSION['usr_username'] || !$_SESSION['usr_first_name'] || !$_SESSION['usr_last_name']){
+                        // GET USER INFO FROM DB
+                        return Result::$FAILURE_AUTH->setContent("MISSING SESSION PARAMETERS");  
+                    }
+                    
+                    if(isset($_SESSION['user_id'])){
                                    
                         $plc_id             = array_key_exists('plc_id',$jsonData) ? $jsonData['plc_id'] : null;
                         $book_comer_count   = array_key_exists('book_comer_number',$jsonData) ? $jsonData['book_comer_number'] : null;
@@ -218,50 +225,90 @@
                         }
                         
                         
-                        
                         // GET place mail address
+                        $query = "SELECT * FROM yb_places WHERE plc_id = ".$plc_id;
+                        $aDetails = mysql_query($query);
+                        $row=mysql_num_rows($aDetails);
+                        
+                        if($row == 1){
+                            
+                            $rowArray=mysql_fetch_assoc($aDetails);
+                            $place_mail=$rowArray['plc_email'];
+                            $place_name=$rowArray['plc_name'];
+                            
+                            
+                            
+                            // Send mail to Youbaku admin regarding new user registration            
+                            $to = "Youbaku admin <info@youbaku.com>";
+                            $to = "Youbaku admin <kskaraca@gmail.com>";
+                            $subject = "User booking request ";
+                            $msg = "Hello admin,  <br/><br/> ".
+                                    "The following user has used reservation system on mobile device. <br/>The details are as follows.<br/><br/>".
+                                    "Name: ". $_SESSION['usr_first_name'] .' '. $_SESSION['usr_last_name'] ."<br/>
+                                     Email: ". $_SESSION['usr_email'] ."<br/>
+                                     Contact: ". $book_contact ."<br/>
+                                     <br/><br/>Thank you.<br/>Youbaku Support Team.<br/>".
+                                    "<a href=\"http://www.youbaku.com/index.php\"> www.youbaku.com</a>";
+                            $headers = "MIME-Version: 1.0" . "\r\n".
+                                       "Content-type: text/html; charset=iso-8859-1" . "\r\n".
+                                       "From: Youbaku".'<'. $_SESSION['usr_email'] .'>'."\r\n" .
+                                       "X-Mailer: PHP/" . phpversion();
+
+                            $mail_sent_youbaku = mail($to,$subject,$msg,$headers);
+                            
+                            
+                            
+                            //Mail to the sender acknowledging confirmation of reservation.    
+                            $to = mysql_real_escape_string($place_mail);
+                            $subject = "Youbaku - Reservation Request.";
+                            $msg = "Hello " . $place_name . ",  " . 
+                                    "<br/><br/> Reservation request successfully done. Thank you.<br/>Youbaku Support Team.<br/>".
+                                    "<a href=\"http://www.youbaku.az/index.php\"> www.youbaku.az</a>";
+                            $headers = "MIME-Version: 1.0" . "\r\n".
+                                       "Content-type: text/html; charset=iso-8859-1" . "\r\n".
+                                       "From: Youbaku <info@youbaku.com>" . "\r\n" .
+                                       "Reply-To: Youbaku admin <info@youbaku.com>" . "\r\n" .
+                                       "X-Mailer: PHP/" . phpversion();
+
+                            $mail_sent_restaurant = mail($to,$subject,$msg,$headers);
+                            
+                            
+                            
+                            //Mail to the sender acknowledging about of reservation.    
+                            $to = mysql_real_escape_string($_SESSION['usr_email']);
+                            $subject = "Youbaku - Reservation successful.";
+                            $msg = "Hello " . $_SESSION['usr_first_name'] . ",  <br/><br/> Reservation request's details are as follows. <br/><br/>".
+                                    "Name: ". $_SESSION['usr_first_name'] .' '. $_SESSION['usr_last_name'] ."<br/>
+                                        Email: ". $_SESSION['usr_email'] ."<br/>
+                                        Contact: ". $book_contact ."<br/>
+                                        Date: ". $book_date . " - " . $book_time . "<br/>
+                                        Person Count: ". $book_comer_count . "<br/>    
+                                        Detail: ". $book_detail . "<br/>".
+                                    "Thank you.<br/>Youbaku Support Team.<br/>".
+                                    "<a href=\"http://www.youbaku.az/index.php\"> www.youbaku.az</a>";
+                            $headers = "MIME-Version: 1.0" . "\r\n".
+                                       "Content-type: text/html; charset=iso-8859-1" . "\r\n".
+                                       "From: Youbaku <info@youbaku.com>" . "\r\n" .
+                                       "Reply-To: Youbaku admin <info@youbaku.com>" . "\r\n" .
+                                       "X-Mailer: PHP/" . phpversion();
+
+                            $mail_sent_user = mail($to,$subject,$msg,$headers);
+                          
+                            
+                            return Result::$SUCCESS->setContent("Successful Reservation");
+                            
+                        }else{                            
+                            
+                            return Result::$FAILURE_COMMENT_MULTIPLE->setContent("Mysql ERROR");  
+                            
+                        }
                         
                         
-                        // Send mail to Youbaku admin regarding new user registration            
-                        $to = "Youbaku admin <info@youbaku.com>";
-                        $to = "Youbaku admin <kskaraca@gmail.com>";
-                        $subject = "User booking request ";
-                        $msg = "Hello admin,  <br/><br/> ".
-                                "The following user has registered on the website. <br/>The details are as follows.<br/><br/>".
-                                "Name: ". "mysql_real_escape_string(sFirstName)".' '."mysql_real_escape_string(sLastName)"."<br/>
-                                 Email: ". "mysql_real_escape_string(semail)" ."<br/>
-                                 Contact: ". "contact" ."<br/>
-                                 <br/><br/>Thank you.<br/>Youbaku Support Team.<br/>".
-                                "<a href=\"http://www.youbaku.com/index.php\"> www.youbaku.com</a>";
-                        $headers = "MIME-Version: 1.0" . "\r\n".
-                                   "Content-type: text/html; charset=iso-8859-1" . "\r\n".
-                                   "From: Youbaku".'<'. "mysql_real_escape_string(semail)".'>'."\r\n" .
-                                   "Reply-To:". "mysql_real_escape_string(sFirstName)".' '."mysql_real_escape_string(sLastName)".'<'. "mysql_real_escape_string(semail)".'>'.' \r\n'. 
-                                   "X-Mailer: PHP/" . phpversion();
-
-                        $mail_sent = mail($to,$subject,$msg,$headers);
-
-
-                        //Mail to the sender acknowledging confirmation of account creation.
-/*
-                        $to = mysql_real_escape_string($semail);
-                        $subject = "Youbaku - Registration successful.";
-                        $msg = "Hello ".mysql_real_escape_string($sFirstName).' '.mysql_real_escape_string($sLastName).",  <br/><br/> Thank you for your interest in registering with us. We will get back to you soon.<br/><br/>Thank you.<br/>Youbaku Support Team.<br/>".
-                                "<a href=\"http://www.youbaku.az/index.php\"> www.youbaku.az</a>";
-                        $headers = "MIME-Version: 1.0" . "\r\n".
-                                   "Content-type: text/html; charset=iso-8859-1" . "\r\n".
-                                   "From: Youbaku <info@youbaku.com>" . "\r\n" .
-                                   "Reply-To: Youbaku admin <info@youbaku.com>" . "\r\n" .
-                                   "X-Mailer: PHP/" . phpversion();
-
-                        $mail_sent = mail($to,$subject,$msg,$headers);
+                        return Result::$SUCCESS_EMPTY->setContent("");
                         
-      */                
-                        
-                        return Result::$SUCCESS->setContent(json_encode($mail_sent));  
 
-                    }else
-                    {                        
+                    }else{                        
+                        
                         return Result::$FAILURE_AUTH->setContent("Please login to add rating.");  
                     }
                     
