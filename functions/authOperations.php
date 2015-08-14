@@ -240,7 +240,6 @@
                             
                             // Send mail to Youbaku admin regarding new user registration            
                             $to = "Youbaku admin <info@youbaku.com>";
-                            $to = "Youbaku admin <kskaraca@gmail.com>";
                             $subject = "User booking request ";
                             $msg = "Hello admin,  <br/><br/> ".
                                     "The following user has used reservation system on mobile device. <br/>The details are as follows.<br/><br/>".
