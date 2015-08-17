@@ -244,9 +244,13 @@
                             $msg = "Hello admin,  <br/><br/> ".
                                     "The following user has used reservation system on mobile device. <br/>The details are as follows.<br/><br/>".
                                     "Name: ". $_SESSION['usr_first_name'] .' '. $_SESSION['usr_last_name'] ."<br/>
-                                     Email: ". $_SESSION['usr_email'] ."<br/>
-                                     Contact: ". $book_contact ."<br/>
-                                     <br/><br/>Thank you.<br/>Youbaku Support Team.<br/>".
+                                    Email: ". $_SESSION['usr_email'] ."<br/>
+                                    Contact: ". $book_contact ."<br/>
+                                    User-ID: ". $_SESSION['user_id'] ."<br/>
+                                    Reservation Place Name: ". $place_name ."<br/>
+                                    Reservation Date: ". $book_date . " - " . $book_time . "<br/>
+                                    Reservation Place Mail: ". $place_mail ."<br/>                                        
+                                    <br/><br/>Thank you.<br/>Youbaku Support Team.<br/>".
                                     "<a href=\"http://www.youbaku.com/index.php\"> www.youbaku.com</a>";
                             $headers = "MIME-Version: 1.0" . "\r\n".
                                        "Content-type: text/html; charset=iso-8859-1" . "\r\n".
