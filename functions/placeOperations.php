@@ -157,6 +157,20 @@
                         
                         //--- Comments are fetched ----
                         $place->rating = getPlacesRating($obj,$place->plc_id);
+                        $place->rating_avg  = 0;
+                        $place->rating_count= 0;
+                        
+                        if($place->rating && count($place->rating)>0){
+                            $total=0;
+                            for ($x = 0; $x <= count($place->rating); $x++) {
+                                $total += $place->rating[$x]->place_rating_rating;
+                            }
+                            $place->rating_avg = sprintf('%0.2f', $total/count($place->rating));
+                            $place->rating_count = count($place->rating);
+                        }else{
+                            $place->rating_avg  = -1;
+                            $place->rating_count= -1;
+                        }
                         
                         //--- Returns average rating of place ---
                         $strSqlAverageRating = "SELECT AVG(r.place_rating_rating) AS rating_avg FROM yb_places plc                                           
@@ -294,7 +308,8 @@
                             for ($x = 0; $x <= count($place->rating); $x++) {
                                 $total += $place->rating[$x]->place_rating_rating;
                             }
-                            $place->rating_avg = $total/count($place->rating);
+                            $place->rating_avg = sprintf('%0.2f', $total/count($place->rating));
+                            //$place->rating_avg = $total/count($place->rating);
                             $place->rating_count = count($place->rating);
                         }else{
                             $place->rating_avg  = -1;
