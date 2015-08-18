@@ -165,7 +165,8 @@
                             for ($x = 0; $x <= count($place->rating); $x++) {
                                 $total += $place->rating[$x]->place_rating_rating;
                             }
-                            $place->rating_avg = sprintf('%0.2f', $total/count($place->rating));
+                            $place->rating_avg = floatval(sprintf('%0.2f', $total/count($place->rating)));
+                            //$place->rating_avg = $total/count($place->rating);
                             $place->rating_count = count($place->rating);
                         }else{
                             $place->rating_avg  = -1;
@@ -308,7 +309,7 @@
                             for ($x = 0; $x <= count($place->rating); $x++) {
                                 $total += $place->rating[$x]->place_rating_rating;
                             }
-                            $place->rating_avg = sprintf('%0.2f', $total/count($place->rating));
+                            $place->rating_avg = floatval(sprintf('%0.2f', $total/count($place->rating)));
                             //$place->rating_avg = $total/count($place->rating);
                             $place->rating_count = count($place->rating);
                         }else{
