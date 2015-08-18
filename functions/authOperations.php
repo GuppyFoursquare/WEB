@@ -213,7 +213,7 @@
                         if(!$plc_id){
                             return Result::$FAILURE_PARAM_MISMATCH->setContent("Place id have to be given");  
                         }else if(!$book_comer_count){
-                            return Result::$FAILURE_PARAM_MISMATCH->setContent("Comer count have to be given");  
+                            return Result::$FAILURE_PARAM_MISMATCH->setContent("Number of person have to be given");  
                         }else if(!$book_date){
                             return Result::$FAILURE_PARAM_MISMATCH->setContent("Reservation date have to be given");  
                         }else if(!$book_time){
@@ -248,8 +248,10 @@
                                     Contact: ". $book_contact ."<br/>
                                     User-ID: ". $_SESSION['user_id'] ."<br/>
                                     Reservation Place Name: ". $place_name ."<br/>
+                                    Reservation Person Number: ". $book_comer_count ."<br/>
                                     Reservation Date: ". $book_date . " - " . $book_time . "<br/>
-                                    Reservation Place Mail: ". $place_mail ."<br/>                                        
+                                    Reservation Place Mail: ". $place_mail ."<br/>
+                                    Reservation Detail: ". $book_detail ."<br/>
                                     <br/><br/>Thank you.<br/>Youbaku Support Team.<br/>".
                                     "<a href=\"http://www.youbaku.com/index.php\"> www.youbaku.com</a>";
                             $headers = "MIME-Version: 1.0" . "\r\n".
